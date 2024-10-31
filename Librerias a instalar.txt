@@ -11,7 +11,7 @@
 6.- pip install Flask-WTF
 
 La version de Python que uso es la:
-Python 3.10.7 y durante la instalacion se añade al PATH.
+Python 3.10.7 y durante la instalacion se marca la casilla para añadir al PATH.
 
 La base de datos se llama terapia_fisica2
 
