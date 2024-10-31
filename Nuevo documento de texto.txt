@@ -1,0 +1,154 @@
+INSERT INTO `ficha_identificaciones` (
+  `fecha_elaboracion`, `nombre_paciente`, `genero`, `folio`, `edad`, 
+  `fecha_nacimiento`, `lugar_nacimiento`, `ocupacion`, `domicilio_actual`, 
+  `estado_civil`, `nacionalidad`, `telefono`, `contacto_emergencia_nombre`, 
+  `contacto_emergencia_telefono`, `diagnostico_medico`, `elaboro_historial_clinico`, 
+  `motivo_consulta`
+) VALUES (
+  '2024-07-30', 'Juan Pérez', 'Masculino', 12345, 30, 
+  '1994-05-15', 'Ciudad de México', 'Ingeniero', 'Avenida Siempre Viva 123', 
+  'Soltero', 'Mexicana', '555-1234', 'María Pérez', 
+  '555-5678', 'Diagnóstico general bueno', 'Dr. López', 
+  'Consulta de rutina'
+);
+INSERT INTO `antecedentespersonalesnopatologicos` (
+  `id_ficha`, `PropiaRenta`, `Ventilacion`, `Iluminacion`, `Piso`, 
+  `Electrodomesticos`, `Servicios`, `DescripcionVivienda`, `NoComidasDia`, 
+  `AguaLts`, `GruposAlimenticios`, `DescripcionRutinaAlimenticia`, `HigieneBucal`, 
+  `BanosDia`, `CambiosRopa`, `ActividadFisica`, `Deporte`, `Ocio`, `Ocupacion`
+) VALUES (
+  1, 'Sí', 'Buena', 'Natural', 'Cerámico', 
+  'Refrigerador, Estufa', 'Agua potable, Electricidad', 'Vivienda unifamiliar', 3, 
+  2.5, 'Frutas, Verduras, Proteínas', 'Desayuno, comida y cena balanceada', 'Buena', 
+  2, 'Diario', 'Camina 30 minutos al día', 'Fútbol', 'Lectura', 'Ingeniero'
+);
+INSERT INTO `antecedentesheredofamiliares` (
+  `id_ficha`, `enfermedad`, `si`, `no`, `parentesco`, `vivo`, `muerto`, `otro`, `observaciones`
+) VALUES (
+  1, 'Diabetes', 1, 0, 'Padre', 1, 0, 'Otro', 'Diagnóstico confirmado en 2020'
+);
+INSERT INTO `antecedentes_patologicos` (
+  `id_ficha`, `patologia`, `si`, `no`, `edad_presentacion`, 
+  `secuelas_complicaciones`, `inmunizaciones`, `observaciones`
+) VALUES (
+  1, 'Hipertensión', 1, 0, 28, 
+  'Controlada con medicación', 'Vacunas al día', 'Controlar regularmente'
+);
+INSERT INTO `antecedentes_ginecobstetricos` (
+  `id_ficha`, `menarquia`, `fecha_ultima_menstruacion`, `caracteristicas_menstruacion`, 
+  `inicio_vida_sexual`, `uso_anticonceptivos`, `numero_embarazos`, `numero_partos`, 
+  `numero_cesareas`, `observaciones`
+) VALUES (
+  1, '15 años', '2024-07-01', 'Regular, cada 28 días', 
+  '20 años', 'Píldora', 0, 0, 0, 'No aplica'
+);
+INSERT INTO `antecedentes_padecimientoactual` (
+  `id_ficha`, `descripcion`
+) VALUES (
+  1, 'Paciente reporta dolores ocasionales en el pecho y mareos frecuentes. Se recomienda realizar pruebas adicionales para determinar la causa.'
+);
+INSERT INTO `exploracion` (
+  `id_ficha`, `habitus_exterior`, `peso`, `altura`, `imc`, 
+  `temperatura`, `pulso_cardiaco`, `frecuencia_respiratoria`, `presion_arterial`, 
+  `saturacion_oxigeno`, `observaciones`, `resultados_previos_actuales`
+) VALUES (
+  1, 'Aparentemente saludable', 70.00, 175.00, 22.86, 
+  36.6, 72, 16, '120/80 mmHg', 
+  98.5, 'Todo dentro de los rangos normales', 'Sin resultados previos relevantes'
+);
+INSERT INTO `partes_cuerpo_miembro_superior` (
+  `id_ficha`, `id_partes`, `observacion`, `palpacion`, `descripcion`, `dolor`
+) VALUES (
+  1, 1, 'Sin hallazgos significativos', 'Normal', 'Sin anomalías', 0
+);
+INSERT INTO `fuerza_muscular_miembro_superior` (
+  `id_ficha`, `derecha`, `movimiento`, `izquierda`
+) VALUES (
+  1, 'Buena', 'Flexión y extensión normales', 'Buena'
+);
+INSERT INTO `goniometria_miembro_superior` (
+  `id_ficha`, `rango_normal`, `izquierdo`, `movimiento`, `derecho`
+) VALUES (
+  1, '0-180 grados', '160 grados', 'Flexión', '165 grados'
+);
+INSERT INTO `reflejososteotendinosos_miembro_superior` (
+  `id_ficha`, `izq`, `rot`, `der`
+) VALUES (
+  1, 'Normal', 'Reflejo bicipital presente', 'Normal'
+);
+INSERT INTO `pruebasevaluacionescomplementarias_miembro_superior` (
+  `id_ficha`, `pruebas`, `resultadosyanalisis`
+) VALUES (
+  1, 'Electromiografía', 'Sin alteraciones significativas detectadas en los músculos del miembro superior.'
+);
+INSERT INTO `partes_cuerpo_miembro_inferior` (
+  `id_ficha`, `id_partes`, `observacion`, `palpacion`, `descripcion`, `dolor`
+) VALUES (
+  1, 2, 'Ligera sensibilidad en la región', 'Normal', 'Sin anomalías significativas', 1
+);
+INSERT INTO `fuerza_muscular_miembro_inferior` (
+  `id_ficha`, `derecha`, `movimiento`, `izquierda`
+) VALUES (
+  1, 'Buena', 'Flexión y extensión normales', 'Buena'
+);
+INSERT INTO `goniometria_miembro_inferior` (
+  `id_ficha`, `rango_normal`, `izquierdo`, `movimiento`, `derecho`
+) VALUES (
+  1, '0-130 grados', '120 grados', 'Flexión', '125 grados'
+);
+INSERT INTO `reflejososteotendinosos_miembro_inferior` (
+  `id_ficha`, `izq`, `rot`, `der`
+) VALUES (
+  1, 'Normal', 'Reflejo rotuliano presente', 'Normal'
+);
+INSERT INTO `pruebasevaluacionescomplementarias_miembro_inferior` (
+  `id_ficha`, `pruebas`, `resultadosyanalisis`
+) VALUES (
+  1, 'Radiografía de rodilla', 'Sin fracturas ni anomalías óseas detectadas.'
+);
+INSERT INTO `ciclo_marcha_miembro_inferior` (`id_ficha`, `fase_apoyo_completo`, `contacto_talon_izquierdo`, `contacto_talon_derecho`, `apoyo_plantar_izquierdo`, `apoyo_plantar_derecho`, `apoyo_medio_izquierdo`, `apoyo_medio_derecho`, `fase_oscilacion_completo`, `balanceo_inicial_izquierdo`, `balanceo_inicial_derecho`, `balanceo_medio_izquierdo`, `balanceo_medio_derecho`, `balanceo_terminal_izquierdo`, `balanceo_terminal_derecho`, `rotacion_pelvica_completo`, `inclinacion_pelvica_completo`, `flexion_rodilla_izquierdo`, `flexion_rodilla_derecho`, `movimientos_coordinados_rodilla_tobillo_izquierdo`, `movimientos_coordinados_rodilla_tobillo_derecho`, `movimiento_centro_gravedad_completo`, `cadencia_completo`, `balanceo_ms_completo`) VALUES (1, 'asdfsadfadsfasfsad', 'sadfsdfasdfadsfasdf', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa', 'asdfasdfasdfasfa');
+INSERT INTO `partes_cuerpo_cabeza_y_torax` (
+  `id_ficha`, `id_partes`, `observacion`, `palpacion`, `descripcion`, `dolor`
+) VALUES (
+  1, 3, 'Sin hallazgos patológicos', 'Normal', 'Sin anomalías detectadas', 0
+);
+INSERT INTO `fuerza_muscular_cabeza_y_torax` (
+  `id_ficha`, `movimiento`, `valores_obtenidos`, `observaciones`
+) VALUES (
+  1, 'Rotación cervical', 'Normal', 'No se encontraron debilidades'
+);
+INSERT INTO `partes_cuerpo_cabeza_y_torax1` (
+  `id_ficha`, `id_partes`, `observacion`, `palpacion`, `descripcion`, `dolor`
+) VALUES (
+  1, 4, 'Ligera rigidez en la zona', 'Aumentada', 'Algunas áreas tensas', 2
+);
+INSERT INTO `fuerza_muscular_cabeza_y_torax1` (
+  `id_ficha`, `movimiento`, `valores_obtenidos`, `observaciones`
+) VALUES (
+  1, 'Flexión del tórax', 'Moderada', 'Aumento en la rigidez'
+);
+INSERT INTO `goniometria_cabeza_y_torax` (
+  `id_ficha`, `rangos_normales`, `movimientos`, `resultados`
+) VALUES (
+  1, '0-70 grados', 'Rotación cervical', '60 grados en la rotación derecha, 65 grados en la izquierda'
+);
+INSERT INTO `pruebasevaluacionescomplementarias_cabeza_y_torax` (
+  `id_ficha`, `pruebas`, `resultadosyanalisis`
+) VALUES (
+  1, 'Tomografía de tórax', 'Sin anomalías significativas en el tejido pulmonar y óseo.'
+);
+INSERT INTO `vistafrontal` (
+  `id_ficha`, `alineacion_corporal`, `observaciones`
+) VALUES (
+  1, 'Alineación normal', 'Sin desviaciones o irregularidades notables en la vista frontal.'
+);
+INSERT INTO `vistalateral` (
+  `id_ficha`, `alineacion_corporal`, `observaciones`
+) VALUES (
+  1, 'Alineación correcta', 'Buena postura lateral, sin inclinaciones o desviaciones evidentes.'
+);
+INSERT INTO `vistaposterior` (
+  `id_ficha`, `alineacion_corporal`, `observaciones`
+) VALUES (
+  1, 'Simétrica', 'No se observaron asimetrías en la vista posterior.'
+);

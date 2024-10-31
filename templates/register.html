@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro y Gestión de usuarios</title>
+
+    <!-- Enlace al Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+
+    <!-- Enlace a Font Awesome para iconos (Asegúrate de tener conexión a internet o incluye la librería localmente) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p8Hv6R2z50kxPXv8PojPwTdcLukYvZKxHv0UQQ0M1x9t4Lz9gAtEdW5EY5hpWd5gB6T4kDL+Vn1I5YdCwz9nEA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Estilos básicos para mejorar la apariencia */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .welcome-message {
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .form-container,
+        .edit-form-container,
+        .table-container {
+            background-color: #ffffff;
+            padding: 25px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .form-container h2,
+        .edit-form-container h2,
+        .table-container h2 {
+            margin-bottom: 20px;
+            color: #444;
+            text-align: center;
+        }
+
+        .form-container label,
+        .edit-form-container label {
+            display: block;
+            margin-top: 15px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-container input,
+        .form-container select,
+        .edit-form-container input,
+        .edit-form-container select {
+            width: 100%;
+            padding: 10px 12px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+            font-size: 16px;
+        }
+
+        .form-container input:focus,
+        .form-container select:focus,
+        .edit-form-container input:focus,
+        .edit-form-container select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .form-container button,
+        .edit-form-container button {
+            margin-top: 25px;
+            padding: 12px;
+            width: 100%;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+
+        .form-container button:hover,
+        .edit-form-container button:hover {
+            background-color: #45a049;
+        }
+
+        .error,
+        .edit-error {
+            color: #e74c3c;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .table-container th,
+        .table-container td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table-container th {
+            background-color: #f9fafb;
+            color: #333;
+        }
+
+        .action-buttons button {
+            margin-right: 10px;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: opacity 0.3s;
+        }
+
+        .edit-btn {
+            background-color: #5bc0de;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            opacity: 0.8;
+        }
+
+        .delete-btn {
+            background-color: #d9534f;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Estilos para el formulario de edición */
+        .edit-form-container {
+            display: none;
+            /* Oculto por defecto */
+        }
+
+        /* Icono de ojo */
+        .password-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-container input {
+            flex: 1;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            cursor: pointer;
+            color: #888;
+            font-size: 20px;
+            user-select: none;
+        }
+
+        .toggle-password:hover {
+            color: #333;
+        }
+
+        /* Estilos para el botón "Regresar" */
+        .back-button {
+            position: fixed;
+            top: 20px; /* Distancia desde la parte superior */
+            left: 20px; /* Distancia desde la izquierda */
+            background-color: #ffffff;
+            color: #333333;
+            border: 2px solid #4CAF50;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            z-index: 1000; /* Asegura que el botón esté por encima de otros elementos */
+        }
+
+        .back-button i {
+            margin-right: 8px;
+        }
+
+        .back-button:hover {
+            background-color: #4CAF50;
+            color: #ffffff;
+            border-color: #4CAF50;
+        }
+
+        /* Media Queries para Responsividad (Opcional) */
+        @media (max-width: 600px) {
+            .back-button {
+                padding: 8px 16px;
+                font-size: 14px;
+                top: 10px;
+                left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <button onclick="window.location.href='/Principal'" class="back-button">
+        <i class="fas fa-arrow-left"></i> Regresar
+    </button>
+
+    <div class="welcome-message" id="welcomeMessage">
+        <!-- Mensaje de bienvenida se llenará dinámicamente -->
+    </div>
+
+    <!-- Formulario de Registro -->
+    <div class="form-container" id="formContainer">
+        <h2>Registro de Usuario</h2>
+        <form id="registerForm">
+            <label for="correo_electronico">Correo Electrónico:</label>
+            <input type="email" id="correo_electronico" name="correo_electronico" placeholder="Ingrese el correo electronico" required>
+
+            <label for="contraseña">Contraseña:</label>
+            <div class="password-container">
+                <input type="password" id="contraseña" name="contraseña" placeholder="Ingrese la contraseña" required>
+                <span class="toggle-password" onclick="togglePasswordVisibility('contraseña')">&#x1f512;</span>
+            </div>
+            <small style="color: #555;">La contraseña debe tener al menos 8 caracteres, incluir una mayúscula, una minúscula, un número y un carácter especial.</small>
+
+            <label for="rol">Rol:</label>
+            <select id="rol" name="rol" required>
+                <option value="">Seleccione un rol</option>
+                <option value="1">Administrador</option>
+                <option value="2">Capturador</option>
+            </select>
+
+            <button type="submit">Registrar</button>
+            <div class="error" id="errorMessage"></div>
+        </form>
+    </div>
+
+    <!-- Formulario de Edición (Inicialmente Oculto) -->
+    <div class="edit-form-container" id="editFormContainer">
+        <h2>Editar Usuario</h2>
+        <form id="editForm">
+            <input type="hidden" id="edit_user_id">
+            
+            <label for="edit_correo_electronico">Correo Electrónico:</label>
+            <input type="email" id="edit_correo_electronico" name="edit_correo_electronico" required>
+
+            <label for="edit_contraseña">Contraseña:</label>
+            <div class="password-container">
+                <input type="password" id="edit_contraseña" name="edit_contraseña" placeholder="Ingrese una nueva contraseña (dejar vacío para mantener la actual)">
+                <span class="toggle-password" onclick="togglePasswordVisibility('edit_contraseña')">&#x1f512;</span>
+            </div>
+            <small style="color: #555;">Si desea cambiar la contraseña, asegúrese de que cumpla con los siguientes requisitos: al menos 8 caracteres, incluir una mayúscula, una minúscula, un número y un carácter especial.</small>
+
+            <label for="edit_rol">Rol:</label>
+            <select id="edit_rol" name="edit_rol" required>
+                <option value="">Seleccione un rol</option>
+                <option value="1">Administrador</option>
+                <option value="2">Capturador</option>
+            </select>
+
+            <button type="submit">Actualizar</button>
+            <div class="edit-error" id="editErrorMessage"></div>
+        </form>
+    </div>
+
+    <!-- Tabla de Usuarios Registrados -->
+    <div class="table-container">
+        <h2>Usuarios Registrados</h2>
+        <table id="usersTable">
+            <thead>
+                <tr>
+                    <th>Correo Electrónico</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se llenarán los usuarios -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Expresión regular para validar la contraseña
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
+
+        // Función para alternar la visibilidad de la contraseña
+        function togglePasswordVisibility(id) {
+            const passwordField = document.getElementById(id);
+            const icon = passwordField.nextElementSibling;
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                icon.innerHTML = '&#x1f511;'; // Icono de abierto
+            } else {
+                passwordField.type = 'password';
+                icon.innerHTML = '&#x1f512;'; // Icono de cerrado
+            }
+        }
+
+        // Mostrar mensaje de bienvenida
+        async function mostrarBienvenida() {
+            const response = await fetch('/usuario_info');
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('welcomeMessage').innerText = `Bienvenido, ${data.correo_electronico} (${data.rol === 1 ? 'Administrador' : 'Capturador'})`;
+            }
+        }
+
+        // Manejar el envío del formulario de registro
+        document.getElementById('registerForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); 
+
+            const correo_electronico = document.getElementById('correo_electronico').value;
+            const contraseña = document.getElementById('contraseña').value;
+            const rol = document.getElementById('rol').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Validación de la contraseña
+            if (!passwordRegex.test(contraseña)) {
+                errorMessage.innerText = 'La contraseña no cumple con los requisitos. Debe tener al menos 8 caracteres, incluir una mayúscula, una minúscula, un número y un carácter especial.';
+                return;
+            }
+
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    correo_electronico: correo_electronico,
+                    contraseña: contraseña,
+                    rol: rol
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Recargar la página después de un registro exitoso
+                window.location.reload();
+            } else {
+                errorMessage.innerText = result.message;
+            }
+        });
+
+        // Lógica para cargar usuarios
+        async function cargarUsuarios() {
+            const response = await fetch('/usuarios');
+            const usuarios = await response.json();
+
+            const tbody = document.querySelector('#usersTable tbody');
+            tbody.innerHTML = ''; // Limpiar la tabla
+
+            usuarios.forEach(usuario => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${usuario.correo_electronico}</td>
+                    <td>${usuario.rol === 1 ? 'Administrador' : 'Capturador'}</td>
+                    <td class="action-buttons">
+                        <button class="edit-btn" onclick="abrirFormularioEdicion(${usuario.id}, '${usuario.correo_electronico}', ${usuario.rol})">Editar</button>
+                        <button class="delete-btn" onclick="eliminarUsuario(${usuario.id})">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Lógica para eliminar usuario con confirmación
+        async function eliminarUsuario(id) {
+            const confirmacion = confirm('¿Estás seguro de que deseas eliminar este usuario?');
+            if (!confirmacion) {
+                return;
+            }
+
+            const response = await fetch(`/usuarios/${id}`, {
+                method: 'DELETE'
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Recargar la página después de eliminar
+                window.location.reload();
+            } else {
+                alert('Error al eliminar el usuario.');
+            }
+        }
+
+        // Funciones para manejar el formulario de edición
+        function abrirFormularioEdicion(id, correo_electronico, rol) {
+            // Ocultar el formulario de registro
+            document.getElementById('formContainer').style.display = 'none';
+
+            // Mostrar el formulario de edición
+            document.getElementById('editFormContainer').style.display = 'block';
+
+            // Llenar los campos del formulario de edición
+            document.getElementById('edit_user_id').value = id;
+            document.getElementById('edit_correo_electronico').value = correo_electronico;
+            document.getElementById('edit_rol').value = rol;
+            document.getElementById('edit_contraseña').value = ''; // La contraseña no se muestra
+
+            // Limpiar mensajes de error
+            document.getElementById('editErrorMessage').innerText = '';
+        }
+
+        // Función para cerrar el formulario de edición (si se implementa un botón de cierre)
+        function cerrarFormularioEdicion() {
+            // Ocultar el formulario de edición
+            document.getElementById('editFormContainer').style.display = 'none';
+
+            // Mostrar el formulario de registro
+            document.getElementById('formContainer').style.display = 'block';
+        }
+
+        // Manejar el envío del formulario de edición
+        document.getElementById('editForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('edit_user_id').value;
+            const correo_electronico = document.getElementById('edit_correo_electronico').value;
+            const rol = document.getElementById('edit_rol').value;
+            const contraseña = document.getElementById('edit_contraseña').value;
+            const editErrorMessage = document.getElementById('editErrorMessage');
+
+            // Validación de la contraseña solo si se ha ingresado una nueva
+            if (contraseña.trim() !== '' && !passwordRegex.test(contraseña)) {
+                editErrorMessage.innerText = 'La nueva contraseña no cumple con los requisitos. Debe tener al menos 8 caracteres, incluir una mayúscula, una minúscula, un número y un carácter especial.';
+                return;
+            }
+
+            const cuerpo = {
+                correo_electronico: correo_electronico,
+                rol: rol
+            };
+
+            if (contraseña.trim() !== '') {
+                cuerpo.contraseña = contraseña;
+            }
+
+            const response = await fetch(`/usuarios/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(cuerpo)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Recargar la página después de actualizar
+                window.location.reload();
+            } else {
+                editErrorMessage.innerText = result.message;
+            }
+        });
+
+        // Actualizar las opciones del rol según los límites
+        async function actualizarOpcionesRol() {
+            const response = await fetch('/roles/counts');
+            if (response.ok) {
+                const data = await response.json();
+                const adminCount = data.admin_count;
+                const capturadorCount = data.capturador_count;
+
+                const rolSelect = document.getElementById('rol');
+                const adminOption = rolSelect.querySelector('option[value="1"]');
+                const capturadorOption = rolSelect.querySelector('option[value="2"]');
+
+                // Deshabilitar opción Administrador si hay 2 ya
+                if (adminCount >= 2) {
+                    adminOption.disabled = true;
+                    adminOption.textContent = 'Administrador (Límite alcanzado)';
+                } else {
+                    adminOption.disabled = false;
+                    adminOption.textContent = 'Administrador';
+                }
+
+                // Deshabilitar opción Capturador si hay 10 ya
+                if (capturadorCount >= 10) {
+                    capturadorOption.disabled = true;
+                    capturadorOption.textContent = 'Capturador (Límite alcanzado)';
+                } else {
+                    capturadorOption.disabled = false;
+                    capturadorOption.textContent = 'Capturador';
+                }
+
+                // También actualizar las opciones en el formulario de edición
+                const editRolSelect = document.getElementById('edit_rol');
+                const editAdminOption = editRolSelect.querySelector('option[value="1"]');
+                const editCapturadorOption = editRolSelect.querySelector('option[value="2"]');
+
+                if (adminCount >= 2) {
+                    editAdminOption.disabled = true;
+                    editAdminOption.textContent = 'Administrador (Límite alcanzado)';
+                } else {
+                    editAdminOption.disabled = false;
+                    editAdminOption.textContent = 'Administrador';
+                }
+
+                if (capturadorCount >= 10) {
+                    editCapturadorOption.disabled = true;
+                    editCapturadorOption.textContent = 'Capturador (Límite alcanzado)';
+                } else {
+                    editCapturadorOption.disabled = false;
+                    editCapturadorOption.textContent = 'Capturador';
+                }
+            }
+        }
+
+        // Mostrar mensaje de bienvenida y cargar usuarios al iniciar
+        async function inicializar() {
+            await mostrarBienvenida();
+            await cargarUsuarios();
+            await actualizarOpcionesRol();
+        }
+
+        // Cargar los usuarios cuando la página carga
+        window.onload = inicializar;
+    </script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+.orange-background {
+  background-color: #FF9600;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+.thin-text {
+  font-weight: 300;
+}
+
+.container11 {
+  margin-top: 0px;
+  text-align: center;
+}
+
+.row11 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  /* Adjust the gap for space between cards */
+}
+
+.cols11 {
+  flex: 1 1 calc(33.33% - 40px);
+  /* Adjust width to fit 3 cards per row with gaps */
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  /* Space between rows */
+}
+
+.container_alumno_cards11 {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.container_alumno_cards11 img {
+  max-width: 100px;
+  height: auto;
+}
+
+.container_alumno_cards11 p {
+  margin-top: 15px;
+}
+
+.container_alumno_cards11:hover {
+  transform: scale(1.05);
+}
+
+.back-button {
+  top: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.back-button i {
+  margin-right: 5px;
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled {
+  background-color: #e9ecef;
+  /* Color de fondo para campos deshabilitados */
+  cursor: not-allowed;
+  /* Cambia el cursor para indicar que están deshabilitados */
+}
+
+#botonOculto {
+  display: none;
+}
+
+#ocultar_datos {
+  display: none;
+}
+
+/* Mostrar el dropdown al pasar el cursor */
+.nav-item.dropdown:hover .dropdown-menu {
+  display: block;
+  margin-top: 0; /* Ajusta según sea necesario */
+}
+
+/* Asegurar que el dropdown-menu se posicione correctamente */
+.dropdown-menu {
+  transition: all 0.3s ease;
+}
+
+/* Opcional: Cambiar el cursor al pasar sobre el mensaje de bienvenida */
+.nav-item.dropdown .nav-link {
+  cursor: pointer;
+}

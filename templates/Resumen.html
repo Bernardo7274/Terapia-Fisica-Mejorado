@@ -1,0 +1,128 @@
+{% extends './base.html' %}
+
+{% block title %}
+  Nuevo Registro
+{% endblock %}
+
+{% block body %}
+  <section class="container11">
+    <p class="display-4 py-4 bold-text">Formularios</p>
+    <div class="row11">
+      <div class="cols11">
+        <a href="{{ url_for('Ficha') }}" class="text-decoration-none">
+          <div class="container_alumno_cards11">
+            <img src="/static/img/formulario.png" alt="icon document" />
+            <p class="py-3">Ficha</p>
+          </div>
+        </a>
+      </div>
+      <div class="cols11">
+        <a href="{{ url_for('MiembroSuperior') }}" class="text-decoration-none">
+          <div class="container_alumno_cards11">
+            <img src="/static/img/formulario.png" alt="icon document" />
+            <p class="py-3">Miembro Superior</p>
+          </div>
+        </a>
+      </div>
+      <div class="cols11">
+        <a href="{{ url_for('MiembroInferior') }}" class="text-decoration-none">
+          <div class="container_alumno_cards11">
+            <img src="/static/img/formulario.png" alt="icon document" />
+            <p class="py-3">Miembro Inferior</p>
+          </div>
+        </a>
+      </div>
+      <div class="cols11">
+        <a href="{{ url_for('CabezaTorax') }}" class="text-decoration-none">
+          <div class="container_alumno_cards11">
+            <img src="/static/img/formariopersona.png" alt="icon document" />
+            <p class="py-3">Cabeza y toráx</p>
+          </div>
+        </a>
+      </div>
+      <div class="cols11">
+        <a href="{{ url_for('EvaluacionDeLaPostura') }}" class="text-decoration-none">
+          <div class="container_alumno_cards11">
+            <img src="/static/img/formariopersona.png" alt="icon document" />
+            <p class="py-3">Evaluación de la postura</p>
+          </div>
+        </a>
+      </div>
+      <div class="cols11">
+        <a href="{{ url_for('NotasSeguimiento') }}" class="text-decoration-none">
+          <div class="container_alumno_cards11">
+            <img src="/static/img/formariopersona.png" alt="icon document" />
+            <p class="py-3">Notas de seguimiento</p>
+          </div>
+        </a>
+      </div>
+      <div class="cols11">
+        <a href="{{ url_for('PlanDiagnostico') }}" class="text-decoration-none">
+          <div class="container_alumno_cards11">
+            <img src="/static/img/formariopersona.png" alt="icon document" />
+            <p class="py-3">Plan de tratamiento</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="container mt-5">
+    <div id="resumenDatos">
+      <!-- Aquí se mostrarán los datos -->
+    </div>
+    <button type="button" class="btn btn-primary mt-3" id="submitData">Enviar Datos</button>
+  </div>
+  
+  <script>
+    const datosDiagnostico = JSON.parse(localStorage.getItem('datosDiagnostico')) || {}
+    const datosNotasSeguimiento = JSON.parse(localStorage.getItem('datosNotasSeguimiento')) || {}
+    const datosEvaluacionPostura = JSON.parse(localStorage.getItem('datosEvaluacionPostura')) || {}
+    const datosCabezaTorax = JSON.parse(localStorage.getItem('datosCabezaTorax')) || {}
+    const datosMiembroInferiores = JSON.parse(localStorage.getItem('datosMiembroInferiores')) || {}
+    const datosFicha = JSON.parse(localStorage.getItem('datosFicha')) || {}
+    const datosMiembroSuperior = JSON.parse(localStorage.getItem('datosMiembroSuperior')) || {}
+    const combinedData = { ...datosFicha, ...datosMiembroSuperior, ...datosMiembroInferiores, ...datosCabezaTorax, ...datosEvaluacionPostura, ...datosNotasSeguimiento, ...datosDiagnostico }
+    
+    const resumenContainer = document.getElementById('resumenDatos')
+    
+    function mostrarDatos(datos, titulo) {
+      const section = document.createElement('div')
+      section.classList.add('mb-3')
+      section.innerHTML = `<h4>${titulo}</h4>`
+      for (const key in datos) {
+        if (Array.isArray(datos[key])) {
+          datos[key].forEach((item, index) => {
+            section.innerHTML += `<p><strong>${key} ${index + 1}:</strong> ${JSON.stringify(item)}</p>`
+          })
+        } else if (typeof datos[key] === 'object' && datos[key] !== null) {
+          // Manejar los objetos de manera legible
+          section.innerHTML += `<p><strong>${key}:</strong></p>`
+          for (const subKey in datos[key]) {
+            section.innerHTML += `<p style="margin-left: 20px;"><strong>${subKey}:</strong> ${datos[key][subKey]}</p>`
+          }
+        } else {
+          section.innerHTML += `<p><strong>${key}:</strong> ${datos[key]}</p>`
+        }
+      }
+      resumenContainer.appendChild(section)
+    }
+    
+    document.getElementById('submitData').addEventListener('click', function () {
+      fetch('/guardar_datos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(combinedData)
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert('Datos guardados exitosamente')
+            localStorage.clear() // Limpiar localStorage después de enviar los datos
+          } else {
+            alert('Error al guardar los datos')
+          }
+        })
+    })
+  </script>
+{% endblock %}

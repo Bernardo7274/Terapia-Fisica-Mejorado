@@ -1,0 +1,34 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
+DELETE FROM antecedentesheredofamiliares;
+DELETE FROM antecedentespersonalesnopatologicos;
+DELETE FROM antecedentes_ginecobstetricos;
+DELETE FROM antecedentes_padecimientoactual;
+DELETE FROM antecedentes_patologicos;
+DELETE FROM ciclo_marcha_miembro_inferior;
+DELETE FROM exploracion;
+DELETE FROM fuerza_muscular_cabeza_y_torax;
+DELETE FROM fuerza_muscular_cabeza_y_torax1;
+DELETE FROM fuerza_muscular_miembro_inferior;
+DELETE FROM fuerza_muscular_miembro_superior;
+DELETE FROM goniometria_cabeza_y_torax;
+DELETE FROM goniometria_miembro_inferior;
+DELETE FROM goniometria_miembro_superior;
+DELETE FROM notas_seguimientos;
+DELETE FROM partes_cuerpo_cabeza_y_torax;
+DELETE FROM partes_cuerpo_cabeza_y_torax1;
+DELETE FROM partes_cuerpo_miembro_inferior;
+DELETE FROM partes_cuerpo_miembro_superior;
+DELETE FROM plan_tratamientos;
+DELETE FROM pruebasevaluacionescomplementarias_cabeza_y_torax;
+DELETE FROM pruebasevaluacionescomplementarias_miembro_inferior;
+DELETE FROM pruebasevaluacionescomplementarias_miembro_superior;
+DELETE FROM reflejososteotendinosos_miembro_inferior;
+DELETE FROM reflejososteotendinosos_miembro_superior;
+DELETE FROM vistafrontal;
+DELETE FROM vistalateral;
+DELETE FROM vistaposterior;
+DELETE FROM ficha_identificaciones;
+ALTER TABLE ficha_identificaciones AUTO_INCREMENT = 1;
+
+SET FOREIGN_KEY_CHECKS = 1;

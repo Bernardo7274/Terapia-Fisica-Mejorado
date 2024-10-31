@@ -1,0 +1,790 @@
+{% extends './base.html' %}
+
+{% block title %}
+  Ficha
+{% endblock %}
+
+{% block body %}
+  <button onclick="window.location.href='/NuevoRegistro'" class="back-button"><i class="fas fa-arrow-left"></i> Regresar</button>
+  <h1 class="text-center bold-text">Ficha</h1>
+
+  <!-- Sección Ficha de Identificación -->
+  <div class="card mb-3 formulario-imprimible">
+    <div class="card-header" data-toggle="collapse" data-target="#fichaIdentificacion" aria-expanded="true" aria-controls="fichaIdentificacion">
+      Ficha de Identificación
+      <i class="fas fa-chevron-up float-right"></i>
+    </div>
+    <div id="fichaIdentificacion" class="collapse show">
+      <div class="card-body">
+        <form class="row g-3 needs-validation" novalidate id="fichaForm">
+          <div class="form-group col-md-3">
+            <label for="fecha">Fecha de elaboración:</label>
+            <input type="date" class="form-control" id="fecha" name="fecha" readonly />
+          </div>
+          <div class="form-group col-md-4">
+            <label for="folio" class="form-label">Folio:</label>
+            <input type="text" class="form-control" id="folio" readonly />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="nombrePaciente" class="form-label">Nombre del Paciente:</label>
+            <input type="text" class="form-control" id="nombrePaciente" required />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="sexo">Sexo:</label>
+            <select class="form-control" id="sexo" name="sexo">
+              <option value="masculino">Masculino</option>
+              <option value="femenino">Femenino</option>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+            <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" value="" />
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="edad" class="form-label">Edad:</label>
+            <input type="number" class="form-control" id="edad" required />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="lugarNacimiento" class="form-label">Lugar de nacimiento:</label>
+            <input type="text" class="form-control" id="lugarNacimiento" required />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-3">
+            <label for="civil">Estado Civil:</label>
+            <select class="form-control" id="civil" name="civil">
+              <option value="soltero">Soltero(a)</option>
+              <option value="casado">Casado(a)</option>
+            </select>
+          </div>
+          <div class="form-group mt-1 col-md-8">
+            <label for="ocupacion" class="form-label">Ocupación:</label>
+            <input type="text" class="form-control" id="ocupacion" required />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="nacionalidad" class="form-label">Nacionalidad:</label>
+            <input type="text" class="form-control" id="nacionalidad" required />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-8">
+            <label for="domicilio" class="form-label">Domicilio Actual:</label>
+            <input type="text" class="form-control" id="domicilio" required />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="telefono" class="form-label">Número Telefónico:</label>
+            <input type="text" class="form-control" id="telefono" required />
+            <div class="valid-feedback"></div>
+          </div>
+          <p class="text-center col-md-12 mt-1">
+            <strong>Contacto de Emergencia</strong>
+          </p>
+          <div class="col-md-8 form-group mt-1">
+            <label for="nombreContactoEmergencia" class="form-label">Nombre:</label>
+            <input type="text" class="form-control" id="nombreContactoEmergencia" required />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="telefonoEmergencia" class="form-label">Número Telefónico:</label>
+            <input type="text" class="form-control" id="telefonoEmergencia" required />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="col-md-4 form-group mt-1">
+            <label for="diagnosticoMedico" class="form-label">Diagnóstico Médico:</label>
+            <input type="text" class="form-control" id="diagnosticoMedico" required />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="col-md-4 form-group mt-1">
+            <label for="elaboroHistorial" class="form-label">Elaboró historial clínico:</label>
+            <input type="text" class="form-control" id="elaboroHistorial" required />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="col-md-4 form-group mt-1">
+            <label for="motivoConsulta" class="form-label">Motivo de Consulta:</label>
+            <input type="text" class="form-control" id="motivoConsulta" required />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="col-md-12">
+            <button id="botonOculto" type="submit" class="btn btn-primary">Guardar y Continuar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección Antecedentes Personales No Patológicos -->
+  <div id="contenedorFicha1" class="card mb-3 formulario-imprimible">
+    <div class="card-header" data-toggle="collapse" data-target="#antecedentesNoPatologicos" aria-expanded="true" aria-controls="antecedentesNoPatologicos">
+      Antecedentes Personales No Patológicos
+      <i class="fas fa-chevron-up float-right"></i>
+      <button type="button" class="btn btn-danger btn-sm float-right mr-2" onclick="eliminarContenedor1()">Eliminar sección</button>
+    </div>
+    <div id="antecedentesNoPatologicos" class="collapse show">
+      <div class="card-body">
+        <form class="row g-3 needs-validation" novalidate id="fichaForm1">
+          <p class="text-center col-md-12 mt-1">
+            <strong>Vivienda</strong>
+          </p>
+          <div class="form-group mt-1 col-md-4">
+            <label for="tipocasa">Propia/Rentada:</label>
+            <input type="text" class="form-control" id="tipocasa" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="ventilacion">Ventilación:</label>
+            <input type="text" class="form-control" id="ventilacion" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="iluminacion">Iluminación:</label>
+            <input type="text" class="form-control" id="iluminacion" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="piso">Piso:</label>
+            <input type="text" class="form-control" id="piso" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="electrodomesticos">Electrodomésticos:</label>
+            <input type="text" class="form-control" id="electrodomesticos" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="Servicios">Servicios (agua drenaje, luz, gas, etc):</label>
+            <input type="text" class="form-control" id="Servicios" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-12">
+            <label for="DescripcionVivienda">Descripción de la vivienda:</label>
+            <textarea type="text" class="form-control" id="DescripcionVivienda" placeholder=""></textarea>
+            <div class="valid-feedback"></div>
+          </div>
+          <p class="text-center col-md-12 mt-1">
+            <strong>Hábitos Alimenticios</strong>
+          </p>
+          <div class="form-group mt-1 col-md-4">
+            <label for="comidasxdia">Comidas al día:</label>
+            <input type="number" class="form-control" id="comidasxdia" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="aguaLts">Agua(lts):</label>
+            <input type="number" class="form-control" id="aguaLts" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="gruposAlimenticios">Grupos alimenticios que consume:</label>
+            <input type="text" class="form-control" id="gruposAlimenticios" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-12">
+            <label for="descripRutinaAlimentaria">Descripción de la rutina alimenticia:</label>
+            <input type="text" class="form-control" id="descripRutinaAlimentaria" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <p class="text-center col-md-12 mt-1">
+            <strong>Higiene</strong>
+          </p>
+          <div class="form-group mt-1 col-md-4">
+            <label for="higieneBucal">Higiene bucal:</label>
+            <input type="text" class="form-control" id="higieneBucal" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="bañosxdia">Baños al día:</label>
+            <input type="text" class="form-control" id="bañosxdia" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="cambiosRopa">Cambios de ropa:</label>
+            <input type="text" class="form-control" id="cambiosRopa" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <p class="text-center col-md-12 mt-1">
+            <strong>OCIO Y OCUPACIÓN (frecuencia, intensidad semanal)</strong>
+          </p>
+          <div class="form-group mt-1 col-md-4">
+            <label for="actFisica">Actividad Física:</label>
+            <input type="text" class="form-control" id="actFisica" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="deporte">Deporte:</label>
+            <input type="text" class="form-control" id="deporte" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="ocio">Ocio:</label>
+            <input type="text" class="form-control" id="ocio" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-12">
+            <label for="ocupacion1">Ocupación:</label>
+            <input type="text" class="form-control" id="ocupacion1" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección Antecedentes Heredofamiliares -->
+  <div id="contenedorFicha2" class="card mb-3 formulario-imprimible">
+    <div class="card-header" data-toggle="collapse" data-target="#antecedentesHeredofamiliares" aria-expanded="true" aria-controls="antecedentesHHeredofamiliares">
+      Antecedentes Heredofamiliares
+      <i class="fas fa-chevron-up float-right"></i>
+      <button type="button" class="btn btn-danger btn-sm float-right mr-2" onclick="eliminarContenedor2()">Eliminar sección</button>
+    </div>
+    <div id="antecedentesHeredofamiliares" class="collapse show">
+      <div class="card-body">
+        <form class="row g-3 needs-validation" novalidate id="fichaForm2">
+          <table class="table table-bordered">
+            <thead class="col">
+              <tr>
+                <th scope="col">Enfermedad</th>
+                <th scope="col">Sí</th>
+                <th scope="col">No</th>
+                <th scope="col">Parentesco</th>
+                <th scope="col">Vivo</th>
+                <th scope="col">Muerto</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Cáncer</td>
+                <td>
+                  <input type="checkbox" name="Cáncer_si" id="Cáncer_si" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Cáncer_no" id="Cáncer_no" value="0" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Cáncer_parentesco" id="Cáncer_parentesco" placeholder="Parentesco" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Cáncer_vivo" id="Cáncer_vivo" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Cáncer_muerto" id="Cáncer_muerto" value="0" />
+                </td>
+              </tr>
+              <tr>
+                <td>Diabetes</td>
+                <td>
+                  <input type="checkbox" name="Diabetes_si" id="Diabetes_si" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Diabetes_no" id="Diabetes_no" value="0" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Diabetes_parentesco" id="Diabetes_parentesco" placeholder="Parentesco" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Diabetes_vivo" id="diabetes_vivo" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Diabetes_muerto" id="Diabetes_muerto" value="0" />
+                </td>
+              </tr>
+              <tr>
+                <td>Hipertensión</td>
+                <td>
+                  <input type="checkbox" name="Hipertensión_si" id="Hipertensión_si" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Hipertensión_no" id="Hipertensión_no" value="0" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Hipertensión_parentesco" id="Hipertensión_parentesco" placeholder="Parentesco" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Hipertensión_vivo" id="Hipertensión_vivo" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Hipertensión_muerto" id="Hipertensión_muerto" value="0" />
+                </td>
+              </tr>
+              <tr>
+                <td>Enfermedades Cardiacas</td>
+                <td>
+                  <input type="checkbox" name="Enfermedades Cardiacas_si" id="Enfermedades Cardiacas_si" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Enfermedades Cardiacas_no" id="Enfermedades Cardiacas_no" value="0" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Enfermedades Cardiacas_parentesco" id="Enfermedades Cardiacas_parentesco" placeholder="Parentesco" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Enfermedades Cardiacas_vivo" id="Enfermedades Cardiacas_vivo" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Enfermedades Cardiacas_muerto" id="Enfermedades Cardiacas_muerto" value="0" />
+                </td>
+              </tr>
+              <tr>
+                <td>Enfermedades Mentales</td>
+                <td>
+                  <input type="checkbox" name="Enfermedades Mentales_si" id="Enfermedades Mentales_si" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Enfermedades Mentales_no" id="Enfermedades Mentales_no" value="0" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Enfermedades Mentales_parentesco" id="Enfermedades Mentales_parentesco" placeholder="Parentesco" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Enfermedades Mentales_vivo" id="Enfermedades Mentales_vivo" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Enfermedades Mentales_muerto" id="Enfermedades Mentales_muerto" value="0" />
+                </td>
+              </tr>
+              <tr>
+                <td>Alergias</td>
+                <td>
+                  <input type="checkbox" name="Alergias_si" id="Alergias_si" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Alergias_no" id="Alergias_no" value="0" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Alergias_parentesco" id="Alergias_parentesco" placeholder="Parentesco" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Alergias_vivo" id="Alergias_vivo" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Alergias_muerto" id="Alergias_muerto" value="0" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="form-group mt-1 col-md-12">
+            <label for="otros">Otros:</label>
+            <input type="text" class="form-control" id="otros" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-12">
+            <label for="observaciones">Observaciones:</label>
+            <input type="text" class="form-control" id="observaciones" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección Antecedentes Personales Patológicos -->
+  <div id="contenedorFicha3" class="card mb-3 formulario-imprimible">
+    <div class="card-header" data-toggle="collapse" data-target="#antecedentesPersonalesPatológicos" aria-expanded="true" aria-controls="antecedentesPersonalesPatológicos">
+      Antecedentes Personales Patológicos
+      <i class="fas fa-chevron-up float-right"></i>
+      <button type="button" class="btn btn-danger btn-sm float-right mr-2" onclick="eliminarContenedor3()">Eliminar sección</button>
+    </div>
+    <div id="antecedentesPersonalesPatológicos" class="collapse show">
+      <div class="card-body">
+        <form class="row g-3 needs-validation" novalidate id="fichaForm3">
+          <table class="table table-bordered">
+            <thead class="col">
+              <tr>
+                <th scope="col">Patologías</th>
+                <th scope="col">Sí</th>
+                <th scope="col">No</th>
+                <th scope="col">Edad que se presento</th>
+                <th scope="col">Secuelas / Complicaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Traumatismos</td>
+                <td>
+                  <input type="checkbox" name="Traumatismos_si" id="Traumatismos_si" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Traumatismos_no" id="traumatismos_no" value="0" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Traumatismos_edad" id="Traumatismos_edad" placeholder="" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Traumatismos_secuelas" id="Traumatismos_secuelas" placeholder="" />
+                </td>
+              </tr>
+              <tr>
+                <td>Cirugías</td>
+                <td>
+                  <input type="checkbox" name="Cirugías_si" id="Cirugías_si" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Cirugías_no" id="Cirugías_no" value="0" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Cirugías_edad" id="Cirugías_edad" placeholder="" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Cirugías_secuelas" id="Cirugías_secuelas" placeholder="" />
+                </td>
+              </tr>
+              <tr>
+                <td>Luxaciones</td>
+                <td>
+                  <input type="checkbox" name="Luxaciones_si" id="Luxaciones_si" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Luxaciones_no" id="Luxaciones_no" value="0" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Luxaciones_edad" id="Luxaciones_edad" placeholder="" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Luxaciones_secuelas" id="Luxaciones_secuelas" placeholder="" />
+                </td>
+              </tr>
+              <tr>
+                <td>Alergias</td>
+                <td>
+                  <input type="checkbox" name="Alergias_si" id="Alergias_si" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Alergias_no" id="Alergias_no" value="0" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Alergias_edad" id="Alergias_edad" placeholder="" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Alergias_secuelas" id="Alergias_secuelas" placeholder="" />
+                </td>
+              </tr>
+              <tr>
+                <td>Toxicomanías</td>
+                <td>
+                  <input type="checkbox" name="Toxicomanías_si" id="Toxicomanías_si" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Toxicomanías_no" id="Toxicomanías_no" value="0" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Toxicomanías_edad" id="Toxicomanías_edad" placeholder="" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Toxicomanías_secuelas" id="Toxicomanías_secuelas" placeholder="" />
+                </td>
+              </tr>
+              <tr>
+                <td>Padecimientos psiquiátricos</td>
+                <td>
+                  <input type="checkbox" name="Padecimientos psiquiátricos_si" id="Padecimientos psiquiátricos_si" value="1" />
+                </td>
+                <td>
+                  <input type="checkbox" name="Padecimientos psiquiátricos_no" id="Padecimientos psiquiátricos_no" value="0" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Padecimientos psiquiátricos_edad" id="Padecimientos psiquiátricos_edad" placeholder="" />
+                </td>
+                <td>
+                  <input type="text" class="form-control" name="Padecimientos psiquiátricos_secuelas" id="Padecimientos psiquiátricos_secuelas" placeholder="" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="form-group mt-1 col-md-12">
+            <label for="inmunizaciones">Inmunizaciones:</label>
+            <input type="text" class="form-control" id="inmunizaciones" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group mt-1 col-md-12">
+            <label for="observaciones_ante">Observaciones:</label>
+            <input type="text" class="form-control" id="observaciones_ante" placeholder="" />
+            <div class="valid-feedback"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección Antecedentes Ginecobstétricos -->
+  <div id="contenedorFicha4" class="card mb-3 formulario-imprimible">
+    <div class="card-header" data-toggle="collapse" data-target="#antecedentesGinecobstétricos" aria-expanded="true" aria-controls="antecedentesGinecobstétricos">
+      Antecedentes Ginecobstétricos
+      <i class="fas fa-chevron-up float-right"></i>
+      <button type="button" class="btn btn-danger btn-sm float-right mr-2" onclick="eliminarContenedor4()">Eliminar sección</button>
+    </div>
+    <div id="antecedentesGinecobstétricos" class="collapse show">
+      <div class="card-body">
+        <form id="fichaForm4">
+          <div class="form-group">
+            <label for="menarquia">Menarquía:</label>
+            <input type="text" class="form-control" id="menarquia" placeholder="Menarquía" />
+          </div>
+          <div class="form-group">
+            <label for="ultimaMenstruacion">Fecha de la última menstruación:</label>
+            <input type="date" class="form-control" id="ultimaMenstruacion" placeholder="Fecha de la última menstruación" />
+          </div>
+          <div class="form-group">
+            <label for="caracteristicasMenstruacion">Características de la menstruación:</label>
+            <input type="text" class="form-control" id="caracteristicasMenstruacion" placeholder="Duración, frecuencia, cantidad de flujo, dolor, etc." />
+          </div>
+          <div class="form-group">
+            <label for="inicioVidaSexual">Inicio de la vida sexual:</label>
+            <input type="date" class="form-control" id="inicioVidaSexual" placeholder="Inicio de la vida sexual" />
+          </div>
+          <div class="form-group">
+            <label for="usoAnticonceptivos">Uso de anticonceptivos:</label>
+            <input type="text" class="form-control" id="usoAnticonceptivos" placeholder="Uso de anticonceptivos" />
+          </div>
+          <div class="form-group">
+            <label for="numEmbarazos">No. de embarazos:</label>
+            <input type="number" class="form-control" id="numEmbarazos" placeholder="Número de embarazos" />
+          </div>
+          <div class="form-group">
+            <label for="numPartos">No. de partos:</label>
+            <input type="number" class="form-control" id="numPartos" placeholder="Número de partos" />
+          </div>
+          <div class="form-group">
+            <label for="numCesareas">No. de cesáreas:</label>
+            <input type="number" class="form-control" id="numCesareas" placeholder="Número de cesáreas" />
+          </div>
+          <div class="form-group">
+            <label for="observacionesGine">Observaciones:</label>
+            <input type="text" class="form-control" id="observacionesGine" placeholder="Observaciones" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección Antecedentes De Padecimiento Actual -->
+  <div id="contenedorFicha5" class="card mb-3 formulario-imprimible">
+    <div class="card-header" data-toggle="collapse" data-target="#antecedentesDePadecimientoActual" aria-expanded="true" aria-controls="antecedentesDePadecimientoActual">
+      Antecedentes De Padecimiento Actual
+      <i class="fas fa-chevron-up float-right"></i>
+      <button type="button" class="btn btn-danger btn-sm float-right mr-2" onclick="eliminarContenedor5()">Eliminar sección</button>
+    </div>
+    <div id="antecedentesDePadecimientoActual" class="collapse show">
+      <div class="card-body">
+        <form id="fichaForm5">
+          <div class="form-group">
+            <label for="describe">Describe: ¿Qué le paso? ¿hace cuánto? ¿cómo se lesiono? ¿qué síntomas presentó? ¿fue al médico ¿tomó algún medicamento? ¿se realizo algún estudio? ¿cuáles? ¿cómo ha evolucionado los síntomas? ¿hay alguna actividad o movimiento que intensifique los síntomas? ¿en algún momento del día se intensifica más? ¿existe alguna actividad que se ha visto limitada por hacer?, etc. :</label>
+            <textarea class="form-control" name="describe" id="describe" style="height: 200px" placeholder="Escribe aquí"></textarea>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección Exploración Física -->
+  <div id="contenedorFicha6" class="card mb-3 formulario-imprimible">
+    <div class="card-header" data-toggle="collapse" data-target="#exploraciónFísica" aria-expanded="true" aria-controls="exploraciónFísica">
+      Exploración Física
+      <i class="fas fa-chevron-up float-right"></i>
+      <button type="button" class="btn btn-danger btn-sm float-right mr-2" onclick="eliminarContenedor6()">Eliminar sección</button>
+    </div>
+    <div id="exploraciónFísica" class="collapse show">
+      <div class="card-body">
+        <form class="row g-3 needs-validation" novalidate id="fichaForm6">
+          <p class="text-start col-md-12">
+            <strong>1. Habitus exterior:</strong>
+          </p>
+          <div class="form-group col-md-12">
+            <label for="habitusExte">¿cómo llega el px? (caminado, con apoyo, etc), ¿llega solo o acompañado?, personalidad (feliz, nervioso, etc):</label>
+            <textarea class="form-control" name="habitusExte" id="habitusExte" style="height: 100px" placeholder="Escribe aquí"></textarea>
+          </div>
+          <p class="text-start col-md-12 mt-1">
+            <strong>2. Somatometría:</strong>
+          </p>
+          <div class="form-group mt-1 col-md-4">
+            <label for="peso">Peso:</label>
+            <input type="text" class="form-control" id="peso" placeholder="" />
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="talla">Altura:</label>
+            <input type="text" class="form-control" id="talla" placeholder="" />
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="tensionArterial">IMC:</label>
+            <input type="text" class="form-control" id="tensionArterial" placeholder="" />
+          </div>
+          <p class="text-start col-md-12 mt-1">
+            <strong>3. Signos vitales:</strong>
+          </p>
+          <div class="form-group mt-1 col-md-4">
+            <label for="temperatura">Temperatura:</label>
+            <input type="text" class="form-control" id="temperatura" placeholder="" />
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="frecuenciaCardiaca">Pulso cardíaco:</label>
+            <input type="text" class="form-control" id="frecuenciaCardiaca" placeholder="" />
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="frecuenciaRespiratoria">Frecuencia respiratoria:</label>
+            <input type="text" class="form-control" id="frecuenciaRespiratoria" placeholder="" />
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="saturacion_de_oxígeno">Saturacion de oxígeno:</label>
+            <input type="text" class="form-control" id="saturacion_de_oxígeno" placeholder="" />
+          </div>
+          <div class="form-group mt-1 col-md-4">
+            <label for="presionArterial">Presión arterial:</label>
+            <input type="text" class="form-control" id="presionArterial" placeholder="" />
+          </div>
+          <div class="form-group mt-1 col-md-8">
+            <label for="observacionesexplofisica">Observaciones:</label>
+            <input type="text" class="form-control" id="observacionesexplofisica" placeholder="" />
+          </div>
+          <div class="form-group mt-1 col-md-12">
+            <label for="resultadospreviosyactuales">Resultados previos y actuales de estudios de laboratorio y gabinete:</label>
+            <input type="text" class="form-control" id="resultadospreviosyactuales" placeholder="" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón "Guardar y Continuar" -->
+  <div class="col-md-12">
+    <button id="botonVisible" type="submit" class="btn btn-primary">Guardar y Continuar</button>
+  </div>
+
+<!-- Botón para enviar el PDF al backend -->
+<div class="col-md-12">
+  <button id="botonGuardarPDF" class="btn btn-secondary">Guardar PDF</button>
+</div>
+
+<script>
+document.getElementById('botonGuardarPDF').addEventListener('click', function() {
+  // Selecciona los formularios
+  const forms = document.querySelectorAll('.formulario-imprimible');
+  const collapseElements = document.querySelectorAll('.collapse');
+  collapseElements.forEach(collapse => {
+    collapse.classList.add('show');
+  });
+
+  // Crea un contenedor temporal
+  const tempContainer = document.createElement('div');
+  const nombrePaciente = document.getElementById('nombrePaciente').value;
+
+  // Guardar el nombre del paciente en localStorage
+  localStorage.setItem('nombrePaciente', nombrePaciente);
+
+  // Añadir estilos personalizados
+  const styles = `
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        color: #333;
+        margin: 20px;
+      }
+      h1 {
+        text-align: center;
+        font-size: 24px;
+        color: #003366;
+        border-bottom: 2px solid #003366;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      .card {
+        border: 2px solid #003366;
+        margin-bottom: 20px;
+        border-radius: 8px;
+      }
+      .card-header {
+        background-color: #003366;
+        color: white;
+        font-weight: bold;
+        padding: 10px;
+        font-size: 18px;
+      }
+      .card-body {
+        padding: 20px;
+        background-color: #f9f9f9;
+      }
+      .form-group label {
+        font-weight: bold;
+        color: #003366;
+      }
+      .form-control {
+        border: 1px solid #003366;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .btn-primary {
+        background-color: #003366;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        margin-top: 20px;
+      }
+      table {
+        width: 100%;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+      }
+      table, th, td {
+        border: 1px solid #003366;
+      }
+      th {
+        background-color: #003366;
+        color: white;
+        padding: 10px;
+        text-align: left;
+      }
+      td {
+        padding: 10px;
+        background-color: #fff;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .bold-text {
+        font-weight: bold;
+      }
+    </style>
+  `;
+  tempContainer.innerHTML = styles;
+
+  forms.forEach(form => {
+    const clonedForm = form.cloneNode(true);
+    const inputs = form.querySelectorAll('input, select, textarea');
+    const clonedInputs = clonedForm.querySelectorAll('input, select, textarea');
+    inputs.forEach((input, index) => {
+      if (input.type === 'checkbox' || input.type === 'radio') {
+        clonedInputs[index].checked = input.checked;
+      } else {
+        clonedInputs[index].value = input.value;
+      }
+    });
+    tempContainer.appendChild(clonedForm);
+  });
+
+  // Generar el PDF con los estilos
+  html2pdf(tempContainer, {
+    margin: 1,
+    filename: 'Ficha.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+  }).output('blob').then(function (pdfBlob) {
+    const formData = new FormData();
+    formData.append('pdf', pdfBlob, 'Ficha.pdf');
+    formData.append('nombrePaciente', nombrePaciente);
+
+    // Enviar el PDF al backend
+    fetch('/guardar_pdf_Ficha', {
+      method: 'POST',
+      body: formData
+    }).then(response => response.json())
+      .then(data => {
+        // Simular clic en el botón con el id "botonVisible"
+        document.getElementById('botonVisible').click();
+      });
+  });
+});
+</script>
+{% endblock %}

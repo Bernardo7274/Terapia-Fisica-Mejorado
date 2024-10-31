@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}
+
+      {% endblock %}
+    </title>
+
+    <!-- Enlace al Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light orange-background">
+      <a class="navbar-brand" href="/Principal">
+        <img src="/static/img/logo_upqroo.png" alt="Logo" style="height: 60px; margin-right: 20px;" />
+        Clinica - Terapia Física
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          {% if session['rol'] != 1 %}
+          <!-- Mostrar "Nuevo Registro" solo para Capturadores -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle bold-text" href="#" id="navbarDropdown" role="button" 
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nuevo Registro</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{{ url_for('NuevoRegistro') }}">Inicio</a>
+              <a class="dropdown-item" href="{{ url_for('Ficha') }}">Ficha</a>
+              <a class="dropdown-item" href="{{ url_for('MiembroSuperior') }}">Miembro Superior</a>
+              <a class="dropdown-item" href="{{ url_for('MiembroInferior') }}">Miembro Inferior</a>
+              <a class="dropdown-item" href="{{ url_for('CabezaTorax') }}">Cabeza y Toráx</a>
+              <a class="dropdown-item" href="{{ url_for('EvaluacionDeLaPostura') }}">Evaluación de la postura</a>
+              <a class="dropdown-item" href="{{ url_for('NotasSeguimiento') }}">Notas de Seguimiento</a>
+              <a class="dropdown-item" href="{{ url_for('PlanDiagnostico') }}">Plan de Tratamiento</a>
+            </div>
+          </li>
+          {% endif %}
+
+          <li class="nav-item">
+            <a class="nav-link bold-text" href="{{ url_for('ConsultaRegistro') }}">Consultar Registro</a>
+          </li>
+
+          {% if session['rol'] == 1 %}
+          <!-- Mostrar "Registro de usuarios" solo para Administradores -->
+          <li class="nav-item">
+            <a class="nav-link bold-text" href="{{ url_for('register') }}">Registro de usuarios</a>
+          </li>
+          {% endif %}
+        </ul>
+        
+        <!-- Mensaje de Bienvenida con Dropdown -->
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle bold-text" href="#" id="userDropdown" role="button" 
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Bienvenido, {{ session['usuario'] }} ({{ 'Administrador' if session['rol'] == 1 else 'Capturador' }})
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+              <!-- Opción Vacía (Deshabilitada) -->
+              <a class="dropdown-item disabled" href="#"></a>
+              <!-- Opción para Cerrar Sesión -->
+              <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                Cerrar Sesión
+              </a>
+            </div>
+          </li>
+          
+          <!-- Formulario para Cerrar Sesión (Oculto) -->
+          <form id="logout-form" action="{{ url_for('logout') }}" method="POST" style="display: none;">
+            <!-- CSRF Token si es necesario -->
+          </form>
+        </ul>
+      </div>
+    </nav>
+    
+
+    <div class="container py-3">
+      {% block body %}
+
+      {% endblock %}
+    </div>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+
+    {% if current_page == 'Ficha' %}
+      <script src="{{ url_for('static', filename='js/envio.js') }}"></script>
+    {% endif %}
+    {% if current_page == 'MiembroSuperior' %}
+      <script src="{{ url_for('static', filename='js/envioSuperior.js') }}"></script>
+    {% endif %}
+    {% if current_page == 'MiembroInferior' %}
+      <script src="{{ url_for('static', filename='js/envioInferior.js') }}"></script>
+    {% endif %}
+    {% if current_page == 'CabezaTorax' %}
+      <script src="{{ url_for('static', filename='js/envioCabezaTorax.js') }}"></script>
+    {% endif %}
+    {% if current_page == 'EvaluacionDeLaPostura' %}
+      <script src="{{ url_for('static', filename='js/envioEvaluacionPostura.js') }}"></script>
+    {% endif %}
+    {% if current_page == 'NotasSeguimiento' %}
+      <script src="{{ url_for('static', filename='js/envioNotasSeguimiento.js') }}"></script>
+    {% endif %}
+    {% if current_page == 'PlanDiagnostico' %}
+      <script src="{{ url_for('static', filename='js/envioPlanDiagnostico.js') }}"></script>
+    {% endif %}
+  </body>
+</html>

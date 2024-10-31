@@ -1,0 +1,214 @@
+{% extends './base.html' %}
+
+{% block title %}
+  Notas de seguimiento
+{% endblock %}
+
+{% block body %}
+  <button onclick="window.location.href='/NuevoRegistro'" class="back-button"><i class="fas fa-arrow-left"></i> Regresar</button>
+  <h1 class="text-center bold-text">Notas de seguimiento</h1>
+
+  <!-- Notas de seguimiento -->
+  <div id="contenedorPrincipal" class="card mb-3 formulario-imprimible">
+    <div class="card-header" data-toggle="collapse" data-target="#notasSeguimiento" aria-expanded="true" aria-controls="notasSeguimiento">
+      Notas de seguimiento
+      <i class="fas fa-chevron-up float-right"></i>
+    </div>
+    <div id="notasSeguimiento" class="collapse show">
+      <div class="card-body">
+        <form class="row g-3 needs-validation" novalidate id="miembroNotasSeguimiento">
+          <div class="form-group col-md-12 mt-1">
+            <label for="nombrePaciente" class="form-label">Nombre del Paciente:</label>
+            <input type="text" class="form-control" id="nombrePaciente_notasSeguimiento" value="" required />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group col-md-6 mt-1">
+            <label for="diagnostico" class="form-label">Diagnóstico:</label>
+            <input type="text" class="form-control" id="diagnostico_notasSeguimiento" value="" required />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group col-md-4 mt-1">
+            <label for="folio" class="form-label">Folio:</label>
+            <input type="text" class="form-control" id="folio_notasSeguimiento" value="" required />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group col-md-8 mt-1">
+            <label for="fecha">Fecha:</label>
+            <input type="date" class="form-control" id="fecha_notasSeguimiento" name="fecha" value="" />
+          </div>
+          <div class="form-group col-md-4 mt-1">
+            <label for="sesion" class="form-label">No. de sesión:</label>
+            <input type="text" class="form-control" id="sesion_notasSeguimiento" value="" required />
+            <div class="valid-feedback"></div>
+          </div>
+          <div class="form-group col-md-12 mt-1">
+            <label for="notas">Notas:</label>
+            <textarea class="form-control" name="notas" id="notas_notasSeguimiento" style="height: 100px" placeholder="Escribe aquí"></textarea>
+          </div>
+          <div class="form-group col-md-12 mt-1">
+            <label for="sugerencias">Sugerencias/observaciones:</label>
+            <textarea class="form-control" name="sugerencias" id="sugerencias_notasSeguimiento" style="height: 100px" placeholder="Escribe aquí"></textarea>
+          </div>
+          <div class="form-group col-md-12 mt-1">
+            <label for="nombrefirma">Nombre y firma del tratante:</label>
+            <textarea class="form-control" name="nombrefirma" id="nombrefirma_notasSeguimiento" style="height: 100px" placeholder="Escribe aquí"></textarea>
+          </div>
+          <div class="col-md-12">
+            <button id="botonOculto" type="submit" class="btn btn-primary">Guardar y Continuar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nuevas secciones -->
+  <div class="formulario-imprimible">
+    <div id="contenedorSecciones">
+      <!-- Aquí se agregarán las nuevas secciones dinámicamente -->
+    </div>
+  </div>
+
+  <!-- Boton -->
+  <div class="col-md-12">
+    <button id="botonVisible" type="submit" class="btn btn-primary">Guardar y Continuar</button>
+    <button type="button" class="btn btn-primary" id="agregarSeccion">Agregar sección</button>
+  </div>
+
+
+<!-- Botón para enviar el PDF al backend -->
+<div class="col-md-12">
+  <button id="botonGuardarPDF" class="btn btn-secondary">Guardar PDF</button>
+</div>
+
+<script>
+document.getElementById('botonGuardarPDF').addEventListener('click', function() {
+  // Selecciona los formularios
+  const forms = document.querySelectorAll('.formulario-imprimible');
+  const collapseElements = document.querySelectorAll('.collapse');
+  collapseElements.forEach(collapse => {
+    collapse.classList.add('show');
+  });
+
+  // Crea un contenedor temporal
+  const tempContainer = document.createElement('div');
+  const nombrePaciente = localStorage.getItem('nombrePaciente');
+
+  // Añadir estilos personalizados
+  const styles = `
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        color: #333;
+        margin: 20px;
+      }
+      h1 {
+        text-align: center;
+        font-size: 24px;
+        color: #003366;
+        border-bottom: 2px solid #003366;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      .card {
+        border: 2px solid #003366;
+        margin-bottom: 20px;
+        border-radius: 8px;
+      }
+      .card-header {
+        background-color: #003366;
+        color: white;
+        font-weight: bold;
+        padding: 10px;
+        font-size: 18px;
+      }
+      .card-body {
+        padding: 20px;
+        background-color: #f9f9f9;
+      }
+      .form-group label {
+        font-weight: bold;
+        color: #003366;
+      }
+      .form-control {
+        border: 1px solid #003366;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .btn-primary {
+        background-color: #003366;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        margin-top: 20px;
+      }
+      table {
+        width: 100%;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+      }
+      table, th, td {
+        border: 1px solid #003366;
+      }
+      th {
+        background-color: #003366;
+        color: white;
+        padding: 10px;
+        text-align: left;
+      }
+      td {
+        padding: 10px;
+        background-color: #fff;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .bold-text {
+        font-weight: bold;
+      }
+    </style>
+  `;
+  tempContainer.innerHTML = styles;
+
+  forms.forEach(form => {
+    const clonedForm = form.cloneNode(true);
+    const inputs = form.querySelectorAll('input, select, textarea');
+    const clonedInputs = clonedForm.querySelectorAll('input, select, textarea');
+    inputs.forEach((input, index) => {
+      if (input.type === 'checkbox' || input.type === 'radio') {
+        clonedInputs[index].checked = input.checked;
+      } else {
+        clonedInputs[index].value = input.value;
+      }
+    });
+    tempContainer.appendChild(clonedForm);
+  });
+
+  // Generar el PDF con los estilos
+  html2pdf(tempContainer, {
+    margin: 1,
+    filename: 'Notas de seguimiento.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+  }).output('blob').then(function (pdfBlob) {
+    const formData = new FormData();
+    formData.append('pdf', pdfBlob, 'Ficha.pdf');
+    formData.append('nombrePaciente', nombrePaciente);
+
+    // Enviar el PDF al backend
+    fetch('/guardar_pdf_Notas_de_seguimiento', {
+      method: 'POST',
+      body: formData
+    }).then(response => response.json())
+      .then(data => {
+        // Simular clic en el botón con el id "botonVisible"
+        document.getElementById('botonVisible').click();
+      });
+  });
+});
+
+</script>
+
+{% endblock %}

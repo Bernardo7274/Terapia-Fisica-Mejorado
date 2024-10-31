@@ -1,0 +1,244 @@
+{% extends './base.html' %}
+
+{% block title %}
+  Plan de tratamiento
+{% endblock %}
+
+{% block body %}
+  <button onclick="window.location.href='/NuevoRegistro'" class="back-button"><i class="fas fa-arrow-left"></i> Regresar</button>
+  <h1 class="text-center bold-text">Plan de tratamiento</h1>
+
+  <!-- Plan de tratamiento -->
+  <div id="contenedorFicha24" class="card mb-3 formulario-imprimible">
+    <div class="card-header" data-toggle="collapse" data-target="#planDiagnostico" aria-expanded="true" aria-controls="planDiagnostico">
+      Plan de tratamiento
+      <i class="fas fa-chevron-up float-right"></i>
+    </div>
+    <div id="planDiagnostico" class="collapse show">
+      <div class="card-body">
+        <form class="row g-3 needs-validation" novalidate id="miembroPlanDiagnostico">
+          <table class="table table-bordered">
+            <thead class="col">
+              <tr>
+                <th scope="col">Objetivo</th>
+                <th scope="col">Modalidad terapéutica</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Dosis</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <textarea class="form-control" name="objetivo_1_planDiagnostico" style="height: 100px; min-width: 100px;" placeholder=""></textarea>
+                </td>
+                <td>
+                  <textarea class="form-control" name="modalidad_1_planDiagnostico" style="height: 100px; min-width: 100px;" placeholder=""></textarea>
+                </td>
+                <td>
+                  <textarea class="form-control" name="descripcion_1_planDiagnostico" style="height: 100px; min-width: 100px;" placeholder=""></textarea>
+                </td>
+                <td>
+                  <textarea class="form-control" name="dosis_1_planDiagnostico" style="height: 100px; min-width: 100px;" placeholder=""></textarea>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <textarea class="form-control" name="objetivo_2_planDiagnostico" style="height: 100px; min-width: 100px;" placeholder=""></textarea>
+                </td>
+                <td>
+                  <textarea class="form-control" name="modalidad_2_planDiagnostico" style="height: 100px; min-width: 100px;" placeholder=""></textarea>
+                </td>
+                <td>
+                  <textarea class="form-control" name="descripcion_2_planDiagnostico" style="height: 100px; min-width: 100px;" placeholder=""></textarea>
+                </td>
+                <td>
+                  <textarea class="form-control" name="dosis_2_planDiagnostico" style="height: 100px; min-width: 100px;" placeholder=""></textarea>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <textarea class="form-control" name="objetivo_3_planDiagnostico" style="height: 100px; min-width: 100px;" placeholder=""></textarea>
+                </td>
+                <td>
+                  <textarea class="form-control" name="modalidad_3_planDiagnostico" style="height: 100px; min-width: 100px;" placeholder=""></textarea>
+                </td>
+                <td>
+                  <textarea class="form-control" name="descripcion_3_planDiagnostico" style="height: 100px; min-width: 100px;" placeholder=""></textarea>
+                </td>
+                <td>
+                  <textarea class="form-control" name="dosis_3_planDiagnostico" style="height: 100px; min-width: 100px;" placeholder=""></textarea>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <textarea class="form-control" name="objetivo_4_planDiagnostico" style="height: 100px; min-width: 100px;" placeholder=""></textarea>
+                </td>
+                <td>
+                  <textarea class="form-control" name="modalidad_4_planDiagnostico" style="height: 100px; min-width: 100px;" placeholder=""></textarea>
+                </td>
+                <td>
+                  <textarea class="form-control" name="descripcion_4_planDiagnostico" style="height: 100px; min-width: 100px;" placeholder=""></textarea>
+                </td>
+                <td>
+                  <textarea class="form-control" name="dosis_4_planDiagnostico" style="height: 100px; min-width: 100px;" placeholder=""></textarea>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="col-md-12">
+            <button id="agregarFilaBtn" type="button" class="btn btn-secondary">Agregar Fila</button>
+            <button id="botonOculto" type="submit" class="btn btn-primary">Guardar y Continuar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Boton -->
+  <div class="col-md-12">
+    <button id="botonVisible" type="submit" class="btn btn-primary">Guardar y Continuar</button>
+  </div>
+
+
+<!-- Botón para enviar el PDF al backend -->
+<div class="col-md-12">
+  <button id="botonGuardarPDF" class="btn btn-secondary">Guardar PDF</button>
+</div>
+
+<script>
+document.getElementById('botonGuardarPDF').addEventListener('click', function() {
+  // Selecciona los formularios
+  const forms = document.querySelectorAll('.formulario-imprimible');
+  const collapseElements = document.querySelectorAll('.collapse');
+  collapseElements.forEach(collapse => {
+    collapse.classList.add('show');
+  });
+
+  // Crea un contenedor temporal
+  const tempContainer = document.createElement('div');
+  const nombrePaciente = localStorage.getItem('nombrePaciente');
+
+  // Añadir estilos personalizados
+  const styles = `
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        color: #333;
+        margin: 20px;
+      }
+      h1 {
+        text-align: center;
+        font-size: 24px;
+        color: #003366;
+        border-bottom: 2px solid #003366;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      .card {
+        border: 2px solid #003366;
+        margin-bottom: 20px;
+        border-radius: 8px;
+      }
+      .card-header {
+        background-color: #003366;
+        color: white;
+        font-weight: bold;
+        padding: 10px;
+        font-size: 18px;
+      }
+      .card-body {
+        padding: 20px;
+        background-color: #f9f9f9;
+      }
+      .form-group label {
+        font-weight: bold;
+        color: #003366;
+      }
+      .form-control {
+        border: 1px solid #003366;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .btn-primary {
+        background-color: #003366;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        margin-top: 20px;
+      }
+      table {
+        width: 100%;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+      }
+      table, th, td {
+        border: 1px solid #003366;
+      }
+      th {
+        background-color: #003366;
+        color: white;
+        padding: 10px;
+        text-align: left;
+      }
+      td {
+        padding: 10px;
+        background-color: #fff;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .bold-text {
+        font-weight: bold;
+      }
+    </style>
+  `;
+  tempContainer.innerHTML = styles;
+
+  forms.forEach(form => {
+    const clonedForm = form.cloneNode(true);
+    const inputs = form.querySelectorAll('input, select, textarea');
+    const clonedInputs = clonedForm.querySelectorAll('input, select, textarea');
+    inputs.forEach((input, index) => {
+      if (input.type === 'checkbox' || input.type === 'radio') {
+        clonedInputs[index].checked = input.checked;
+      } else {
+        clonedInputs[index].value = input.value;
+      }
+    });
+    tempContainer.appendChild(clonedForm);
+  });
+
+  // Generar el PDF con los estilos
+  html2pdf(tempContainer, {
+    margin: 1,
+    filename: 'Plan de tratamiento.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+  }).output('blob').then(function (pdfBlob) {
+    const formData = new FormData();
+    formData.append('pdf', pdfBlob, 'Ficha.pdf');
+    formData.append('nombrePaciente', nombrePaciente);
+
+    // Enviar el PDF al backend
+    fetch('/guardar_pdf_Plan_de_tratamiento', {
+      method: 'POST',
+      body: formData
+    }).then(response => response.json())
+      .then(data => {
+        // Simular clic en el botón con el id "botonVisible"
+        document.getElementById('botonVisible').click();
+      });
+  });
+});
+
+
+
+
+
+
+</script>
+
+{% endblock %}
