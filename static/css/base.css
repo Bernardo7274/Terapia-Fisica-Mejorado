@@ -86,6 +86,10 @@ select:disabled {
   display: none;
 }
 
+#botonVisible{
+  display: none;
+}
+
 /* Mostrar el dropdown al pasar el cursor */
 .nav-item.dropdown:hover .dropdown-menu {
   display: block;
@@ -101,3 +105,67 @@ select:disabled {
 .nav-item.dropdown .nav-link {
   cursor: pointer;
 }
+
+/* Contenedor principal en línea */
+.followup-container-inline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px; /* Espaciado entre elementos */
+  padding: 10px 20px;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  background-color: #ffffff;
+  font-family: Arial, sans-serif;
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Encabezado */
+.followup-header-inline {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-right: 10px;
+}
+
+/* Texto del archivo seleccionado */
+.followup-file-name-inline {
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+  flex-grow: 1; /* Hace que este texto ocupe el espacio restante si es necesario */
+  text-align: center;
+}
+
+/* Botones */
+.followup-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.followup-select-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.followup-select-btn:hover {
+  background-color: #0056b3;
+}
+
+.followup-send-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.followup-send-btn:hover {
+  background-color: #218838;
+}
+
+

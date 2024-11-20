@@ -102,7 +102,7 @@
 
 <!-- Botón para enviar el PDF al backend -->
 <div class="col-md-12">
-  <button id="botonGuardarPDF" class="btn btn-secondary">Guardar PDF</button>
+  <button id="botonGuardarPDF" class="btn btn-secondary" disabled>Guardar PDF</button>
 </div>
 
 <script>
@@ -234,11 +234,42 @@ document.getElementById('botonGuardarPDF').addEventListener('click', function() 
   });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const botonGuardarPDF = document.getElementById('botonGuardarPDF');
+    const forms = document.querySelectorAll('.formulario-imprimible');
 
+    // Función para verificar si todos los campos están llenos
+    const verificarCamposLlenos = () => {
+      let todosLlenos = true;
 
+      // Iterar sobre todos los formularios
+      forms.forEach(form => {
+        const inputs = form.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+          if (
+            (input.type === 'checkbox' || input.type === 'radio') ? !input.checked : !input.value.trim()
+          ) {
+            todosLlenos = false;
+          }
+        });
+      });
 
+      // Habilitar o deshabilitar el botón basado en la validación
+      botonGuardarPDF.disabled = !todosLlenos;
+    };
 
+    // Agregar eventos de escucha a los campos
+    forms.forEach(form => {
+      const inputs = form.querySelectorAll('input, textarea, select');
+      inputs.forEach(input => {
+        input.addEventListener('input', verificarCamposLlenos);
+        input.addEventListener('change', verificarCamposLlenos);
+      });
+    });
 
+    // Verificar inicialmente
+    verificarCamposLlenos();
+  });
 </script>
 
 {% endblock %}

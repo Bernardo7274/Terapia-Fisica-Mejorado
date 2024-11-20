@@ -242,7 +242,7 @@
                 <input type="password" id="contraseña" name="contraseña" placeholder="Ingrese la contraseña" required>
                 <span class="toggle-password" onclick="togglePasswordVisibility('contraseña')">&#x1f512;</span>
             </div>
-            <small style="color: #555;">La contraseña debe tener al menos 8 caracteres, incluir una mayúscula, una minúscula, un número y un carácter especial.</small>
+            <small style="color: #555;">La contraseña debe tener logitud maxima de 12 caracteres y minima de 8 caracteres.</small>
 
             <label for="rol">Rol:</label>
             <select id="rol" name="rol" required>
@@ -270,7 +270,7 @@
                 <input type="password" id="edit_contraseña" name="edit_contraseña" placeholder="Ingrese una nueva contraseña (dejar vacío para mantener la actual)">
                 <span class="toggle-password" onclick="togglePasswordVisibility('edit_contraseña')">&#x1f512;</span>
             </div>
-            <small style="color: #555;">Si desea cambiar la contraseña, asegúrese de que cumpla con los siguientes requisitos: al menos 8 caracteres, incluir una mayúscula, una minúscula, un número y un carácter especial.</small>
+            <small style="color: #555;">Si desea cambiar la contraseña, asegúrese de que cumpla con los siguientes requisitos: logitud maxima de 12 caracteres y minima de 8 caracteres.</small>
 
             <label for="edit_rol">Rol:</label>
             <select id="edit_rol" name="edit_rol" required>
@@ -303,7 +303,7 @@
 
     <script>
         // Expresión regular para validar la contraseña
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
+        const passwordRegex = /^.{8,12}$/;
 
         // Función para alternar la visibilidad de la contraseña
         function togglePasswordVisibility(id) {

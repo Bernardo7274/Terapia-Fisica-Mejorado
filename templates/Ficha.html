@@ -789,35 +789,106 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     const botonGuardarPDF = document.getElementById('botonGuardarPDF');
-    const forms = document.querySelectorAll('form');
+    const forms = document.querySelectorAll('.formulario-imprimible');
 
-    // Función que verifica si todos los campos de los formularios están llenos
-    function checkFormCompletion() {
-        let allFilled = true;
+    // Función para verificar si todos los campos están llenos
+    const verificarCamposLlenos = () => {
+        let todosLlenos = true;
 
+        // Iterar sobre todos los formularios
         forms.forEach(form => {
-            const inputs = form.querySelectorAll('input, select, textarea');
+            const inputs = form.querySelectorAll('input, textarea, select');
             inputs.forEach(input => {
-                // Excluir los checkboxes y verificar solo campos requeridos
-                if (input.type !== 'checkbox' && input.required && !input.value.trim()) {
-                    allFilled = false;
+                if (
+                    input.type !== 'checkbox' && input.type !== 'radio' && !input.value.trim()
+                ) {
+                    todosLlenos = false;
+                }
+            });
+
+            // Verificar que al menos un checkbox está seleccionado por fila si hay checkboxes
+            const filasConCheckboxes = form.querySelectorAll('tr');
+            filasConCheckboxes.forEach(fila => {
+                const checkboxes = fila.querySelectorAll('input[type="checkbox"]');
+                if (checkboxes.length > 0) {
+                    const algunoMarcado = Array.from(checkboxes).some(cb => cb.checked);
+                    if (!algunoMarcado) {
+                        todosLlenos = false;
+                    }
                 }
             });
         });
 
-        botonGuardarPDF.disabled = !allFilled;
-    }
+        // Habilitar o deshabilitar el botón basado en la validación
+        botonGuardarPDF.disabled = !todosLlenos;
+    };
 
-    // Escuchar cambios en tiempo real para input, select y textarea
+    // Agregar eventos de escucha a los campos
     forms.forEach(form => {
-        form.querySelectorAll('input:not([type="checkbox"]), textarea').forEach(field => {
-            field.addEventListener('input', checkFormCompletion);
-        });
-        
-        form.querySelectorAll('select').forEach(field => {
-            field.addEventListener('change', checkFormCompletion);
+        const inputs = form.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.addEventListener('input', verificarCamposLlenos);
+            input.addEventListener('change', verificarCamposLlenos);
         });
     });
+
+    // Verificar inicialmente
+    verificarCamposLlenos();
+
+    // Función para limitar la selección de checkboxes en una fila
+    const limitarCheckboxes = (rowSelector, maxSelection) => {
+        const rows = document.querySelectorAll(rowSelector);
+
+        rows.forEach(row => {
+            const checkboxes = row.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+
+                    // Si se excede el máximo permitido, deshabilitar los no seleccionados
+                    if (checkedCount > maxSelection) {
+                        checkboxes.forEach(cb => {
+                            if (!cb.checked) cb.disabled = true;
+                        });
+                    } else {
+                        // Habilitar todos si se está dentro del límite
+                        checkboxes.forEach(cb => {
+                            cb.disabled = false;
+                        });
+                    }
+
+                    // Revalidar campos llenos después de cambios en los checkboxes
+                    verificarCamposLlenos();
+                });
+            });
+        });
+    };
+
+    // Limitar a 1 checkbox en cada fila de la sección Antecedentes Heredofamiliares
+    limitarCheckboxes('#antecedentesHeredofamiliares tbody tr', 1);
+
+    // Limitar a 1 checkbox en cada fila de la sección Antecedentes Personales Patológicos
+    limitarCheckboxes('#antecedentesPersonalesPatológicos tbody tr', 0);
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const sexoSelect = document.getElementById('sexo');
+    const antecedentesGinecobstetricos = document.getElementById('contenedorFicha4');
+
+    const toggleAntecedentesGinecobstetricos = () => {
+      if (sexoSelect.value === 'femenino') {
+        antecedentesGinecobstetricos.style.display = 'block';
+      } else {
+        antecedentesGinecobstetricos.style.display = 'none';
+      }
+    };
+
+    // Llamar la función inicialmente por si hay un valor predeterminado
+    toggleAntecedentesGinecobstetricos();
+
+    // Agregar evento para cambios en el select
+    sexoSelect.addEventListener('change', toggleAntecedentesGinecobstetricos);
+  });
 </script>
 {% endblock %}

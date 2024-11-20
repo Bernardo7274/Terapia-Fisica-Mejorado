@@ -304,6 +304,32 @@ def guardar_pdf_Plan_de_tratamiento():
     return jsonify({'message': f'PDF guardado en: {pdf_path}'}), 200
 
 
+@app.route('/guardar_pdf_Notas_de_seguimiento_modificado', methods=['POST'])
+def guardar_pdf_Notas_de_seguimiento_modificado():
+    # Obtener el archivo PDF y el nombre del paciente desde el request
+    pdf_file = request.files.get('pdf')
+    nombre_paciente = request.form.get('nombrePaciente')
+
+    if not pdf_file or not nombre_paciente:
+        return jsonify({'message': 'Error: Falta el archivo o el nombre del paciente.'}), 400
+
+    # Ruta base para guardar los archivos
+    base_path = 'Pacientes_PDF'
+
+    # Crear la carpeta con el nombre del paciente dentro de la carpeta principal
+    paciente_folder = os.path.join(base_path, nombre_paciente)
+    
+    if not os.path.exists(paciente_folder):
+        os.makedirs(paciente_folder)
+
+    # Guardar el PDF en la carpeta del paciente
+    pdf_path = os.path.join(paciente_folder, 'Notas de seguimiento.pdf')
+    pdf_file.save(pdf_path)
+
+    return jsonify({'message': f'PDF guardado en: {pdf_path}'}), 200
+
+
+
 
 
 
