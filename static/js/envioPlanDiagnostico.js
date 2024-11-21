@@ -22,11 +22,11 @@ document.getElementById('miembroPlanDiagnostico').addEventListener('submit', fun
 });
 
 document.querySelectorAll('textarea').forEach(element => {
-    element.addEventListener('change', guardarDatosDiagnostico);
+    element.addEventListener('change', guardarDatosDiagnostico1);
 });
 
 // Función para guardar los datos de la tabla en el localStorage
-function guardarDatosDiagnostico() {
+function guardarDatosDiagnostico1() {
     const filas = [];
     document.querySelectorAll('#miembroPlanDiagnostico tbody tr').forEach((tr, index) => {
         const fila = {
@@ -62,7 +62,7 @@ function cargarDatosDiagnostico() {
 
             // Añadir evento de cambio a cada textarea para guardar los datos
             newRow.querySelectorAll('textarea').forEach(element => {
-                element.addEventListener('change', guardarDatosDiagnostico);
+                element.addEventListener('change', guardarDatosDiagnostico1);
             });
         });
     }
@@ -87,11 +87,11 @@ document.getElementById('agregarFilaBtn').addEventListener('click', function () 
     `;
 
     tableBody.appendChild(newRow);
-    guardarDatosDiagnostico();
+    guardarDatosDiagnostico1();
 
     // Añadir eventos a los nuevos textarea
     newRow.querySelectorAll('textarea').forEach(element => {
-        element.addEventListener('change', guardarDatosDiagnostico);
+        element.addEventListener('change', guardarDatosDiagnostico1);
     });
 });
 
@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
     loadFormDataPlanDiagnostico();
 
     document.querySelectorAll('textarea').forEach(element => {
-        element.addEventListener('input', guardarDatosDiagnostico);
+        element.addEventListener('input', guardarDatosDiagnostico1);
     });
 });
 
