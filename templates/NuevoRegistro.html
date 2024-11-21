@@ -66,4 +66,17 @@
       </div>
     </div>
   </section>
+
+  <body>
+    <button onclick="limpiarLocalStorage()">Limpiar LocalStorage</button>
+  </body>
+
+  <script>
+    function limpiarLocalStorage() {
+      if (confirm('¿Estás seguro de que deseas limpiar todos los datos guardados en el localStorage?')) {
+        localStorage.clear()
+        alert('¡Todos los datos han sido eliminados!')
+      }
+    }
+  </script>
 {% endblock %}

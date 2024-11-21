@@ -655,240 +655,243 @@
     <button id="botonGuardarPDF" class="btn btn-secondary" disabled>Guardar PDF</button>
   </div>
 
-<script>
-  document.getElementById('botonGuardarPDF').addEventListener('click', function() {
-    // Selecciona los formularios
-    const forms = document.querySelectorAll('.formulario-imprimible');
-    const collapseElements = document.querySelectorAll('.collapse');
-    collapseElements.forEach(collapse => {
-      collapse.classList.add('show');
-    });
-
-    // Crea un contenedor temporal
-    const tempContainer = document.createElement('div');
-    const nombrePaciente = document.getElementById('nombrePaciente').value;
-
-    // Guardar el nombre del paciente en localStorage
-    localStorage.setItem('nombrePaciente', nombrePaciente);
-
-    // Añadir estilos personalizados
-    const styles = `
-      <style>
-        body {
-          font-family: 'Arial', sans-serif;
-          color: #333;
-          margin: 20px;
-        }
-        h1 {
-          text-align: center;
-          font-size: 24px;
-          color: #003366;
-          border-bottom: 2px solid #003366;
-          padding-bottom: 10px;
-          margin-bottom: 20px;
-        }
-        .card {
-          border: 2px solid #003366;
-          margin-bottom: 20px;
-          border-radius: 8px;
-        }
-        .card-header {
-          background-color: #003366;
-          color: white;
-          font-weight: bold;
-          padding: 10px;
-          font-size: 18px;
-        }
-        .card-body {
-          padding: 20px;
-          background-color: #f9f9f9;
-        }
-        .form-group label {
-          font-weight: bold;
-          color: #003366;
-        }
-        .form-control {
-          border: 1px solid #003366;
-          padding: 10px;
-          border-radius: 5px;
-        }
-        .btn-primary {
-          background-color: #003366;
-          color: white;
-          border: none;
-          padding: 10px 20px;
-          font-size: 16px;
-          border-radius: 5px;
-          margin-top: 20px;
-        }
-        table {
-          width: 100%;
-          margin-bottom: 20px;
-          border-collapse: collapse;
-        }
-        table, th, td {
-          border: 1px solid #003366;
-        }
-        th {
-          background-color: #003366;
-          color: white;
-          padding: 10px;
-          text-align: left;
-        }
-        td {
-          padding: 10px;
-          background-color: #fff;
-        }
-        .text-center {
-          text-align: center;
-        }
-        .bold-text {
-          font-weight: bold;
-        }
-      </style>
-    `;
-    tempContainer.innerHTML = styles;
-
-    forms.forEach(form => {
-      const clonedForm = form.cloneNode(true);
-      const inputs = form.querySelectorAll('input, select, textarea');
-      const clonedInputs = clonedForm.querySelectorAll('input, select, textarea');
-      inputs.forEach((input, index) => {
-        if (input.type === 'checkbox' || input.type === 'radio') {
-          clonedInputs[index].checked = input.checked;
-        } else {
-          clonedInputs[index].value = input.value;
-        }
-      });
-      tempContainer.appendChild(clonedForm);
-    });
-
-    // Generar el PDF con los estilos
-    html2pdf(tempContainer, {
-      margin: 1,
-      filename: 'Ficha.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    }).output('blob').then(function (pdfBlob) {
-      const formData = new FormData();
-      formData.append('pdf', pdfBlob, 'Ficha.pdf');
-      formData.append('nombrePaciente', nombrePaciente);
-
-      // Enviar el PDF al backend
-      fetch('/guardar_pdf_Ficha', {
-        method: 'POST',
-        body: formData
-      }).then(response => response.json())
-        .then(data => {
-          // Simular clic en el botón con el id "botonVisible"
-          document.getElementById('botonVisible').click();
-        });
-    });
-  });
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const botonGuardarPDF = document.getElementById('botonGuardarPDF');
-    const forms = document.querySelectorAll('.formulario-imprimible');
-
-    // Función para verificar si todos los campos están llenos
-    const verificarCamposLlenos = () => {
-        let todosLlenos = true;
-
-        // Iterar sobre todos los formularios
-        forms.forEach(form => {
-            const inputs = form.querySelectorAll('input, textarea, select');
-            inputs.forEach(input => {
-                if (
-                    input.type !== 'checkbox' && input.type !== 'radio' && !input.value.trim()
-                ) {
-                    todosLlenos = false;
+  <script>
+    document.getElementById('botonGuardarPDF').addEventListener('click', function () {
+      // Selecciona los formularios
+      const forms = document.querySelectorAll('.formulario-imprimible')
+      const collapseElements = document.querySelectorAll('.collapse')
+      collapseElements.forEach((collapse) => {
+        collapse.classList.add('show')
+      })
+    
+      // Crea un contenedor temporal
+      const tempContainer = document.createElement('div')
+      const nombrePaciente = document.getElementById('nombrePaciente').value
+    
+      // Guardar el nombre del paciente en localStorage
+      localStorage.setItem('nombrePaciente', nombrePaciente)
+    
+      // Añadir estilos personalizados
+      const styles = `
+              <style>
+                body {
+                  font-family: 'Arial', sans-serif;
+                  color: #333;
+                  margin: 20px;
                 }
-            });
-
-            // Verificar que al menos un checkbox está seleccionado por fila si hay checkboxes
-            const filasConCheckboxes = form.querySelectorAll('tr');
-            filasConCheckboxes.forEach(fila => {
-                const checkboxes = fila.querySelectorAll('input[type="checkbox"]');
-                if (checkboxes.length > 0) {
-                    const algunoMarcado = Array.from(checkboxes).some(cb => cb.checked);
-                    if (!algunoMarcado) {
-                        todosLlenos = false;
-                    }
+                h1 {
+                  text-align: center;
+                  font-size: 24px;
+                  color: #003366;
+                  border-bottom: 2px solid #003366;
+                  padding-bottom: 10px;
+                  margin-bottom: 20px;
                 }
-            });
-        });
-
-        // Habilitar o deshabilitar el botón basado en la validación
-        botonGuardarPDF.disabled = !todosLlenos;
-    };
-
-    // Agregar eventos de escucha a los campos
-    forms.forEach(form => {
-        const inputs = form.querySelectorAll('input, textarea, select');
-        inputs.forEach(input => {
-            input.addEventListener('input', verificarCamposLlenos);
-            input.addEventListener('change', verificarCamposLlenos);
-        });
-    });
-
-    // Verificar inicialmente
-    verificarCamposLlenos();
-
-    // Función para limitar la selección de checkboxes en una fila
-    const limitarCheckboxes = (rowSelector, maxSelection) => {
-        const rows = document.querySelectorAll(rowSelector);
-
-        rows.forEach(row => {
-            const checkboxes = row.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', () => {
-                    const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
-
-                    // Si se excede el máximo permitido, deshabilitar los no seleccionados
-                    if (checkedCount > maxSelection) {
-                        checkboxes.forEach(cb => {
-                            if (!cb.checked) cb.disabled = true;
-                        });
-                    } else {
-                        // Habilitar todos si se está dentro del límite
-                        checkboxes.forEach(cb => {
-                            cb.disabled = false;
-                        });
-                    }
-
-                    // Revalidar campos llenos después de cambios en los checkboxes
-                    verificarCamposLlenos();
-                });
-            });
-        });
-    };
-
-    // Limitar a 1 checkbox en cada fila de la sección Antecedentes Heredofamiliares
-    limitarCheckboxes('#antecedentesHeredofamiliares tbody tr', 1);
-
-    // Limitar a 1 checkbox en cada fila de la sección Antecedentes Personales Patológicos
-    limitarCheckboxes('#antecedentesPersonalesPatológicos tbody tr', 0);
-});
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const sexoSelect = document.getElementById('sexo');
-    const antecedentesGinecobstetricos = document.getElementById('contenedorFicha4');
-
-    const toggleAntecedentesGinecobstetricos = () => {
-      if (sexoSelect.value === 'femenino') {
-        antecedentesGinecobstetricos.style.display = 'block';
-      } else {
-        antecedentesGinecobstetricos.style.display = 'none';
+                .card {
+                  border: 2px solid #003366;
+                  margin-bottom: 20px;
+                  border-radius: 8px;
+                }
+                .card-header {
+                  background-color: #003366;
+                  color: white;
+                  font-weight: bold;
+                  padding: 10px;
+                  font-size: 18px;
+                }
+                .card-body {
+                  padding: 20px;
+                  background-color: #f9f9f9;
+                }
+                .form-group label {
+                  font-weight: bold;
+                  color: #003366;
+                }
+                .form-control {
+                  border: 1px solid #003366;
+                  padding: 10px;
+                  border-radius: 5px;
+                }
+                .btn-primary {
+                  background-color: #003366;
+                  color: white;
+                  border: none;
+                  padding: 10px 20px;
+                  font-size: 16px;
+                  border-radius: 5px;
+                  margin-top: 20px;
+                }
+                table {
+                  width: 100%;
+                  margin-bottom: 20px;
+                  border-collapse: collapse;
+                }
+                table, th, td {
+                  border: 1px solid #003366;
+                }
+                th {
+                  background-color: #003366;
+                  color: white;
+                  padding: 10px;
+                  text-align: left;
+                }
+                td {
+                  padding: 10px;
+                  background-color: #fff;
+                }
+                .text-center {
+                  text-align: center;
+                }
+                .bold-text {
+                  font-weight: bold;
+                }
+              </style>
+            `
+      tempContainer.innerHTML = styles
+    
+      forms.forEach((form) => {
+        const clonedForm = form.cloneNode(true)
+        const inputs = form.querySelectorAll('input, select, textarea')
+        const clonedInputs = clonedForm.querySelectorAll('input, select, textarea')
+        inputs.forEach((input, index) => {
+          if (input.type === 'checkbox' || input.type === 'radio') {
+            clonedInputs[index].checked = input.checked
+          } else {
+            clonedInputs[index].value = input.value
+          }
+        })
+        tempContainer.appendChild(clonedForm)
+      })
+    
+      // Generar el PDF con los estilos
+      html2pdf(tempContainer, {
+        margin: 1,
+        filename: 'Ficha.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      })
+        .output('blob')
+        .then(function (pdfBlob) {
+          const formData = new FormData()
+          formData.append('pdf', pdfBlob, 'Ficha.pdf')
+          formData.append('nombrePaciente', nombrePaciente)
+    
+          // Enviar el PDF al backend
+          fetch('/guardar_pdf_Ficha', {
+            method: 'POST',
+            body: formData
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              // Simular clic en el botón con el id "botonVisible"
+              document.getElementById('botonVisible').click()
+            })
+        })
+    })
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      const botonGuardarPDF = document.getElementById('botonGuardarPDF')
+      const forms = document.querySelectorAll('.formulario-imprimible')
+      const sexoInput = document.getElementById('sexo')
+    
+      // Función para verificar si una sección debe ser excluida según el sexo
+      const isSectionExcludedByGender = (form) => {
+        const id = form.id
+        const sexo = sexoInput.value
+        return id === 'contenedorFicha4' && sexo === 'masculino' // Excluir antecedentes ginecobstétricos para masculino
       }
-    };
-
-    // Llamar la función inicialmente por si hay un valor predeterminado
-    toggleAntecedentesGinecobstetricos();
-
-    // Agregar evento para cambios en el select
-    sexoSelect.addEventListener('change', toggleAntecedentesGinecobstetricos);
-  });
-</script>
+    
+      // Función para verificar si todos los campos están llenos
+      const verificarCamposLlenos = () => {
+        let todosLlenos = true
+    
+        // Iterar sobre todos los formularios
+        forms.forEach((form) => {
+          if (isSectionExcludedByGender(form)) {
+            return // Ignorar formularios excluidos por género
+          }
+    
+          const inputs = form.querySelectorAll('input, textarea, select')
+          inputs.forEach((input) => {
+            if (input.type !== 'radio' && !input.value.trim()) {
+              todosLlenos = false
+            }
+          })
+        })
+    
+        // Habilitar o deshabilitar el botón basado en la validación
+        botonGuardarPDF.disabled = !todosLlenos
+      }
+    
+      // Agregar eventos de escucha a los campos
+      forms.forEach((form) => {
+        const inputs = form.querySelectorAll('input, textarea, select')
+        inputs.forEach((input) => {
+          input.addEventListener('input', verificarCamposLlenos)
+          input.addEventListener('change', verificarCamposLlenos)
+        })
+      })
+    
+      // Verificar inicialmente
+      verificarCamposLlenos()
+    
+      // Agregar evento para actualizar validación al cambiar el sexo
+      sexoInput.addEventListener('change', verificarCamposLlenos)
+    
+      // Función para limitar la selección de checkboxes en una fila
+      const limitarCheckboxes = (rowSelector, maxSelection) => {
+        const rows = document.querySelectorAll(rowSelector)
+    
+        rows.forEach((row) => {
+          const checkboxes = row.querySelectorAll('input[type="checkbox"]')
+          checkboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', () => {
+              const checkedCount = Array.from(checkboxes).filter((cb) => cb.checked).length
+    
+              // Si se excede el máximo permitido, deshabilitar los no seleccionados
+              if (checkedCount > maxSelection) {
+                checkboxes.forEach((cb) => {
+                  if (!cb.checked) cb.disabled = true
+                })
+              } else {
+                // Habilitar todos si se está dentro del límite
+                checkboxes.forEach((cb) => {
+                  cb.disabled = false
+                })
+              }
+    
+              // Revalidar campos llenos después de cambios en los checkboxes
+              verificarCamposLlenos()
+            })
+          })
+        })
+      }
+    
+      // Limitar a 1 checkbox en cada fila de la sección Antecedentes Heredofamiliares
+      limitarCheckboxes('#antecedentesHeredofamiliares tbody tr', 1)
+    
+      // Limitar a 1 checkbox en cada fila de la sección Antecedentes Personales Patológicos
+      limitarCheckboxes('#antecedentesPersonalesPatológicos tbody tr', 0)
+    })
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      const sexoSelect = document.getElementById('sexo')
+      const antecedentesGinecobstetricos = document.getElementById('contenedorFicha4')
+    
+      const toggleAntecedentesGinecobstetricos = () => {
+        if (sexoSelect.value === 'femenino') {
+          antecedentesGinecobstetricos.style.display = 'block'
+        } else {
+          antecedentesGinecobstetricos.style.display = 'none'
+        }
+      }
+    
+      // Llamar la función inicialmente por si hay un valor predeterminado
+      toggleAntecedentesGinecobstetricos()
+    
+      // Agregar evento para cambios en el select
+      sexoSelect.addEventListener('change', toggleAntecedentesGinecobstetricos)
+    })
+  </script>
 {% endblock %}

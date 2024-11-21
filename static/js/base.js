@@ -27,20 +27,28 @@ function eliminarContenedor1() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
+
         contenedor.parentNode.removeChild(contenedor);
     }
 }
@@ -54,19 +62,26 @@ function eliminarContenedor2() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -79,19 +94,26 @@ function eliminarContenedor3() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -104,19 +126,26 @@ function eliminarContenedor4() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -129,19 +158,26 @@ function eliminarContenedor5() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -154,19 +190,26 @@ function eliminarContenedor6() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -179,19 +222,26 @@ function eliminarContenedor7() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -204,19 +254,26 @@ function eliminarContenedor8() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -229,19 +286,26 @@ function eliminarContenedor9() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -254,19 +318,26 @@ function eliminarContenedor10() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -279,19 +350,26 @@ function eliminarContenedor10() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -304,19 +382,26 @@ function eliminarContenedor11() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -329,19 +414,26 @@ function eliminarContenedor12() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -354,19 +446,26 @@ function eliminarContenedor13() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -379,19 +478,26 @@ function eliminarContenedor14() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -404,19 +510,26 @@ function eliminarContenedor15() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -429,19 +542,26 @@ function eliminarContenedor16() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -454,19 +574,26 @@ function eliminarContenedor17() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -479,19 +606,26 @@ function eliminarContenedor18() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -504,19 +638,26 @@ function eliminarContenedor19() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -529,19 +670,26 @@ function eliminarContenedor20() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -554,19 +702,26 @@ function eliminarContenedor21() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -579,19 +734,26 @@ function eliminarContenedor22() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -604,19 +766,26 @@ function eliminarContenedor23() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -629,19 +798,26 @@ function eliminarContenedor24() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
@@ -654,19 +830,26 @@ function eliminarContenedor25() {
         var inputs = contenedor.getElementsByTagName('input');
         var selects = contenedor.getElementsByTagName('select');
         var textareas = contenedor.getElementsByTagName('textarea');
+
         for (var i = 0; i < inputs.length; i++) {
             var input = inputs[i];
             if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = false;
+            } else if (input.type === 'date') {
+                input.value = '0001-01-01'; // Formato ISO para fechas
+            } else if (input.type === 'number') {
+                input.value = 0; // Valor numérico predeterminado
             } else {
-                input.value = '';
+                input.value = 'N/A'; // Valor predeterminado para otros tipos de input
             }
         }
+
         for (var i = 0; i < selects.length; i++) {
-            selects[i].selectedIndex = -1;
+            selects[i].selectedIndex = -1; // Reinicia el índice seleccionado
         }
+
         for (var i = 0; i < textareas.length; i++) {
-            textareas[i].value = '';
+            textareas[i].value = 'N/A'; // Valor predeterminado para textareas
         }
         contenedor.parentNode.removeChild(contenedor);
     }
