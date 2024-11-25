@@ -71,6 +71,209 @@
     <button onclick="limpiarLocalStorage()">Limpiar LocalStorage</button>
   </body>
 
+  <div class="followup-container-inline">
+    <span class="followup-header-inline">Notas de seguimiento</span>
+    <input
+      type="file"
+      id="fileInput"
+      accept="application/pdf"
+      style="display: none"
+    />
+    <button class="followup-btn followup-select-btn" onclick="selectFile()">
+      Seleccionar archivo
+    </button>
+    <span id="fileName" class="followup-file-name-inline"
+      >Sin archivos seleccionados</span
+    >
+    <button class="followup-btn followup-send-btn" onclick="sendFile()">
+      Enviar
+    </button>
+  </div>
+  
+  <div class="container mt-5">
+    <div id="resumenDatos">
+      <!-- Aquí se mostrarán los datos -->
+    </div>
+    <!-- Botón que se activará después del éxito -->
+    <button type="button" class="btn btn-primary mt-3" id="submitData" disabled>
+      Enviar Datos
+    </button>
+  </div>
+  
+  <script>
+    const datosDiagnostico =
+      JSON.parse(localStorage.getItem("datosDiagnostico")) || {};
+    const datosNotasSeguimiento =
+      JSON.parse(localStorage.getItem("datosNotasSeguimiento")) || {};
+    const datosEvaluacionPostura =
+      JSON.parse(localStorage.getItem("datosEvaluacionPostura")) || {};
+    const datosCabezaTorax =
+      JSON.parse(localStorage.getItem("datosCabezaTorax")) || {};
+    const datosMiembroInferiores =
+      JSON.parse(localStorage.getItem("datosMiembroInferiores")) || {};
+    const datosFicha = JSON.parse(localStorage.getItem("datosFicha")) || {};
+    const datosMiembroSuperior =
+      JSON.parse(localStorage.getItem("datosMiembroSuperior")) || {};
+    const combinedData = {
+      ...datosFicha,
+      ...datosMiembroSuperior,
+      ...datosMiembroInferiores,
+      ...datosCabezaTorax,
+      ...datosEvaluacionPostura,
+      ...datosNotasSeguimiento,
+      ...datosDiagnostico,
+    };
+  
+    const resumenContainer = document.getElementById("resumenDatos");
+  
+    function mostrarDatos(datos, titulo) {
+      const section = document.createElement("div");
+      section.classList.add("mb-3");
+      section.innerHTML = `<h4>${titulo}</h4>`;
+      for (const key in datos) {
+        if (Array.isArray(datos[key])) {
+          datos[key].forEach((item, index) => {
+            section.innerHTML += `<p><strong>${key} ${
+              index + 1
+            }:</strong> ${JSON.stringify(item)}</p>`;
+          });
+        } else if (typeof datos[key] === "object" && datos[key] !== null) {
+          // Manejar los objetos de manera legible
+          section.innerHTML += `<p><strong>${key}:</strong></p>`;
+          for (const subKey in datos[key]) {
+            section.innerHTML += `<p style="margin-left: 20px;"><strong>${subKey}:</strong> ${datos[key][subKey]}</p>`;
+          }
+        } else {
+          section.innerHTML += `<p><strong>${key}:</strong> ${datos[key]}</p>`;
+        }
+      }
+      resumenContainer.appendChild(section);
+    }
+  
+    document.getElementById("submitData").addEventListener("click", function () {
+      fetch("/guardar_datos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(combinedData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert("Datos guardados exitosamente");
+            localStorage.clear(); // Limpiar localStorage después de enviar los datos
+          } else {
+            alert("Error al guardar los datos");
+          }
+        });
+    });
+  
+    let selectedFile = null; // Variable para almacenar el archivo seleccionado
+  
+    // Función para abrir el selector de archivos
+    function selectFile() {
+      document.getElementById("fileInput").click();
+    }
+  
+    // Evento para actualizar el nombre del archivo seleccionado
+    document
+      .getElementById("fileInput")
+      .addEventListener("change", function (event) {
+        const file = event.target.files[0];
+        if (file) {
+          if (file.type === "application/pdf") {
+            selectedFile = file; // Guardar el archivo seleccionado
+            document.getElementById("fileName").textContent = file.name; // Mostrar el nombre del archivo
+            Swal.fire({
+              icon: "success",
+              title: "Archivo seleccionado",
+              text: `Se ha seleccionado el archivo: ${file.name}`,
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Tipo de archivo no válido",
+              text: "Solo se permiten archivos PDF.",
+            });
+            this.value = ""; // Reiniciar el input
+            document.getElementById("fileName").textContent =
+              "Sin archivos seleccionados";
+            selectedFile = null; // Reiniciar el archivo seleccionado
+          }
+        }
+      });
+  
+    // Función para enviar el archivo
+    function sendFile() {
+      if (!selectedFile) {
+        Swal.fire({
+          icon: "warning",
+          title: "Ningún archivo seleccionado",
+          text: "Por favor, selecciona un archivo antes de enviar.",
+        });
+        return;
+      }
+  
+      const nombrePaciente = localStorage.getItem("nombrePaciente");
+      if (!nombrePaciente) {
+        Swal.fire({
+          icon: "warning",
+          title: "Nombre del paciente no encontrado",
+          text: "Por favor, asegúrate de que el nombre del paciente esté configurado en el sistema.",
+        });
+        return;
+      }
+  
+      // Crear el objeto FormData para enviar los datos
+      const formData = new FormData();
+      formData.append("pdf", selectedFile); // Archivo PDF
+      formData.append("nombrePaciente", nombrePaciente); // Nombre del paciente
+  
+      // Deshabilitar el botón de envío mientras se procesa la solicitud
+      const followupButton = document.querySelector(
+        ".followup-btn.followup-send-btn"
+      );
+      followupButton.disabled = true;
+  
+      // Enviar el archivo al backend
+      fetch("/guardar_pdf_Notas_de_seguimiento_modificado", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => {
+          if (!response.ok) {
+            return response.json().then((error) => {
+              throw new Error(
+                error.message || "Error desconocido en el servidor"
+              );
+            });
+          }
+          return response.json();
+        })
+        .then((data) => {
+          Swal.fire({
+            icon: "success",
+            title: "Archivo enviado",
+            text: `El archivo se ha enviado correctamente`,
+          });
+  
+          // Cambiar el estado de los botones después del éxito
+          const submitDataButton = document.getElementById("submitData");
+          submitDataButton.disabled = false; // Activar el botón
+          followupButton.disabled = true; // Deshabilitar el botón de envío del PDF
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: "error",
+            title: "Error al enviar",
+            text: error.message,
+          });
+  
+          // Reactivar el botón de envío en caso de error
+          followupButton.disabled = false;
+        });
+    }
+  </script>
+
   <script>
     function limpiarLocalStorage() {
       if (confirm('¿Estás seguro de que deseas limpiar todos los datos guardados en el localStorage?')) {

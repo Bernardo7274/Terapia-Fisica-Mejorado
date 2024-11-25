@@ -1,5 +1,25 @@
-{% extends './base.html' %} 
-{% block title %} Edición Registro {% endblock %} 
-{% block body %}
+{% extends './base.html' %} {% block title %} Edición Registro {% endblock %} {%
+block body %}
 
+<script>
+  // Obtener la URL actual
+  const url = window.location.href;
+
+  // Crear una URLSearchParams a partir de la URL
+  const params = new URLSearchParams(new URL(url).search);
+
+  // Obtener el valor del parámetro 'Id'
+  const id = params.get("Id");
+
+  // Verificar si el id existe
+  if (id) {
+    // Guardar el id en localStorage
+    localStorage.setItem("Id", id);
+
+    // Mostrar el id en la consola
+    console.log("ID extraído y guardado:", id);
+  } else {
+    console.log("No se encontró el parámetro Id en la URL.");
+  }
+</script>
 {% endblock %}

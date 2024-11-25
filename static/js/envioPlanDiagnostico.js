@@ -18,7 +18,7 @@ function guardarDatosDiagnostico() {
 document.getElementById('miembroPlanDiagnostico').addEventListener('submit', function (event) {
     event.preventDefault();
     guardarDatosDiagnostico();
-    window.location.href = '/Resumen';
+    window.location.href = '/NuevoRegistro';
 });
 
 document.querySelectorAll('textarea').forEach(element => {
