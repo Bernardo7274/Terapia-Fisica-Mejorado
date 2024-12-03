@@ -8,6 +8,7 @@ import mysql.connector
 from mysql.connector import Error
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+from flask import send_from_directory
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
@@ -113,10 +114,32 @@ def ConsultaRegistro():
     cursor.execute(sql, tuple(params))
     registros = cursor.fetchall()
 
+    # Obtener los archivos PDF de las carpetas de los pacientes
+    pacientes_pdfs = {}
+    for registro in registros:
+        paciente_nombre = registro[2]
+        folder_path = os.path.join('Pacientes_PDF', paciente_nombre)
+
+        if os.path.exists(folder_path):
+            pdf_files = [file for file in os.listdir(folder_path) if file.endswith('.pdf')]
+            pacientes_pdfs[paciente_nombre] = pdf_files
+
     cursor.close()
     connection.close()
 
-    return render_template('ConsultaRegistro.html', folios=folios, clasificaciones=clasificaciones, registros=registros)
+    return render_template('ConsultaRegistro.html', folios=folios, clasificaciones=clasificaciones, registros=registros, pacientes_pdfs=pacientes_pdfs)
+
+@app.route('/descargar_pdf/<nombre_paciente>/<pdf_nombre>')
+def descargar_pdf(nombre_paciente, pdf_nombre):
+    # Ruta de la carpeta de PDFs
+    folder_path = os.path.join('Pacientes_PDF', nombre_paciente)
+    
+    # Verificar si el archivo PDF existe
+    pdf_path = os.path.join(folder_path, pdf_nombre)
+    if os.path.exists(pdf_path):
+        return send_from_directory(folder_path, pdf_nombre, as_attachment=True)
+    else:
+        return "Archivo no encontrado", 404
 
 def generar_id_ficha_unico(cursor):
     while True:

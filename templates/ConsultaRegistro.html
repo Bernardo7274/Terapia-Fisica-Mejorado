@@ -1,43 +1,46 @@
 {% extends './base.html' %}
-
-{% block title %}
-  Consultar Registro
-{% endblock %}
-
+{% block title %}Consultar Registro{% endblock %}
 {% block body %}
-  <button onclick="window.location.href='/Principal'" class="back-button"><i class="fas fa-arrow-left"></i> Regresar</button>
-  <div id="consultaRegistro">
-    <div class="card-body">
-      <form class="row g-3 needs-validation" method="GET" action="/ConsultaRegistro" novalidate id="fichaForm">
-        <div class="form-group col-md-3">
-          <label for="clasificacion">Nombre:</label>
-          <select class="form-control" id="clasificacion" name="nombre">
-            <option value="">Todos</option>
-            {% for clasificacion in clasificaciones %}
-              <option value="{{ clasificacion.0 }}">{{ clasificacion.0 }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <div class="form-group col-md-3">
-          <label for="folio">Folio del paciente:</label>
-          <select class="form-control" id="folio" name="folio">
-            <option value="">Todos</option>
-            {% for folio in folios %}
-              <option value="{{ folio.0 }}">{{ folio.0 }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <div class="form-group col-md-3">
-          <button type="submit" class="btn btn-primary">Filtrar</button>
-        </div>
-        <div class="form-group col-md-3">
-          <button type="button" class="btn btn-success" onclick="window.location.href='/exportar_excel'">Exportar</button>
-        </div>
-      </form>
-    </div>
+<button onclick="window.location.href='/Principal'" class="back-button btn btn-secondary mb-3">
+  <i class="fas fa-arrow-left"></i> Regresar
+</button>
 
-    <table class="table">
-      <thead>
+<div id="consultaRegistro">
+  <div class="card shadow-sm p-4">
+    <h4 class="card-title mb-4">Consulta de Registro</h4>
+    <form class="row g-3 needs-validation" method="GET" action="/ConsultaRegistro" novalidate id="fichaForm">
+      <div class="form-group col-md-3">
+        <label for="clasificacion">Nombre:</label>
+        <select class="form-control" id="clasificacion" name="nombre">
+          <option value="">Todos</option>
+          {% for clasificacion in clasificaciones %}
+          <option value="{{ clasificacion.0 }}">{{ clasificacion.0 }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="folio">Folio del paciente:</label>
+        <select class="form-control" id="folio" name="folio">
+          <option value="">Todos</option>
+          {% for folio in folios %}
+          <option value="{{ folio.0 }}">{{ folio.0 }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+        <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+      </div>
+      <div class="form-group col-md-3">
+        <button type="button" class="btn btn-success w-100" onclick="window.location.href='/exportar_excel'">
+          Exportar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="table-responsive mt-4">
+    <table class="table table-bordered table-striped table-hover">
+      <thead class="table-light">
         <tr>
           <th scope="col">#</th>
           <th scope="col">Fecha</th>
@@ -45,23 +48,86 @@
           <th scope="col">Género</th>
           <th scope="col">Folio</th>
           <th scope="col">Acciones</th>
+          <th scope="col">Descargar PDF</th>
         </tr>
       </thead>
       <tbody>
         {% for registro in registros %}
-          <tr>
-            <th scope="row">{{ registro.0 }}</th>
-            <td>{{ registro.1 }}</td>
-            <td>{{ registro.2 }}</td>
-            <td>{{ registro.3 }}</td>
-            <td>{{ registro.4 }}</td>
-            <td>
-              <button class="btn btn-warning" onclick="window.location.href='/EdicionRegistro?Id={{ registro.0 }}'">Editar</button>
-            </td>
-          </tr>
+        <tr>
+          <th scope="row">{{ registro.0 }}</th>
+          <td>{{ registro.1 }}</td>
+          <td>{{ registro.2 }}</td>
+          <td>{{ registro.3 }}</td>
+          <td>{{ registro.4 }}</td>
+          <td>
+            <button class="btn btn-warning btn-sm" onclick="window.location.href='/EdicionRegistro?Id={{ registro.0 }}'">
+              Editar
+            </button>
+          </td>
+          <td>
+            {% set carpeta_pdf = registro.2 %}
+            {% if carpeta_pdf in pacientes_pdfs %}
+            {% for file in pacientes_pdfs[carpeta_pdf] %}
+            <a href="{{ url_for('descargar_pdf', nombre_paciente=carpeta_pdf, pdf_nombre=file) }}" class="btn btn-info btn-sm">
+              Descargar {{ file }}
+            </a>
+            {% endfor %}
+            {% else %}
+            No PDF disponible
+            {% endif %}
+          </td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
+</div>
+
 {% endblock %}
 
+<style>
+  .back-button {
+    margin-bottom: 1rem;
+  }
+
+  .card {
+    margin-top: 2rem;
+  }
+
+  .table {
+    margin-top: 1rem;
+  }
+
+  .btn {
+    font-size: 14px;
+  }
+
+  .table th, .table td {
+    vertical-align: middle;
+  }
+
+  .table-responsive {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+
+  .btn-warning {
+    background-color: #f39c12;
+    border-color: #e67e22;
+  }
+
+  .btn-warning:hover {
+    background-color: #e67e22;
+    border-color: #d35400;
+  }
+
+  .btn-info {
+    background-color: #17a2b8;
+    border-color: #138496;
+  }
+
+  .btn-info:hover {
+    background-color: #138496;
+    border-color: #0c6f82;
+  }
+</style>
