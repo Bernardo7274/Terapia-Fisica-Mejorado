@@ -55,7 +55,7 @@ function generarFolio() {
   const dia = fecha.getDate().toString().padStart(2, "0"); // Día en formato de dos dígitos
   const aleatorio = Math.floor(Math.random() * 100)
     .toString()
-    .padStart(2, "0"); // Número aleatorio entre 00 y 99
+    .padStart(4, "0"); // Número aleatorio entre 00 y 99
   return año + dia + aleatorio;
 }
 

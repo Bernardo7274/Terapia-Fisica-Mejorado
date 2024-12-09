@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const fecha = new Date();
     const año = fecha.getFullYear().toString().slice(-2); // Últimos 2 dígitos del año
     const dia = fecha.getDate().toString().padStart(2, "0"); // Día en formato DD
-    const numeroAleatorio = Math.floor(10 + Math.random() * 90).toString(); // Número aleatorio de 2 dígitos
+    const numeroAleatorio = Math.floor(1000 + Math.random() * 9999).toString(); // Número aleatorio de 2 dígitos
 
     return año + dia + numeroAleatorio; // Genera un folio de 6 dígitos
   }
