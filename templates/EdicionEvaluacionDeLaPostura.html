@@ -1,0 +1,530 @@
+{% extends './base.html' %} {% block title %} Edicion Evaluación de la postura
+{% endblock %} {% block body %}
+<button onclick="window.location.href='/EdicionRegistro'" class="back-button">
+  <i class="fas fa-arrow-left"></i> Regresar
+</button>
+
+<h1 class="text-center bold-text">Evaluación de la postura</h1>
+
+<!-- Sección Vista Frontal -->
+<div id="contenedorFicha12" class="card mb-3 formulario-imprimible">
+  <div
+    class="card-header"
+    data-toggle="collapse"
+    data-target="#vistaFrontal"
+    aria-expanded="true"
+  >
+    Vista Frontal
+    <i class="fas fa-chevron-up float-right"></i>
+    <button
+      type="button"
+      class="btn btn-danger btn-sm float-right mr-2"
+      onclick="eliminarContenedor12()"
+    >
+      Eliminar sección
+    </button>
+  </div>
+  <div id="vistaFrontal" class="collapse show">
+    <div class="card-body">
+      <form
+        class="row g-3 needs-validation"
+        novalidate
+        id="miembroEvaluacionPostura"
+      >
+        <label class="form-group col-md-12" for="evaluacionPostura"
+          ><u>Evaluación de la postura:</u></label
+        >
+        <div
+          class="form-group row col-md-12 mx-auto d-flex justify-content-center"
+        >
+          <div class="card-body col-md-6">
+            <table class="table table-bordered">
+              <thead>
+                <th colspan="2" class="text-center">Vista Frontal</th>
+                <tr>
+                  <th>Alineación corporal</th>
+                  <th>Observaciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Cabeza</td>
+                  <td>
+                    <input type="text" class="form-control" name="Cabeza_ob" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Hombros</td>
+                  <td>
+                    <input type="text" class="form-control" name="Hombros_ob" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Miembros Superiores</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="Miembros Superiores_ob"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Tronco</td>
+                  <td>
+                    <input type="text" class="form-control" name="Tronco_ob" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Cadera</td>
+                  <td>
+                    <input type="text" class="form-control" name="Cadera_ob" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Rodillas</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="Rodillas_ob"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Pies</td>
+                  <td>
+                    <input type="text" class="form-control" name="Pies_ob" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-6 text-center">
+            <img
+              src="{{ url_for('static', filename='img/VistaFrontal.jpg') }}"
+              class="img-fluid mt-5 mb-6"
+              alt="VistaFrontal"
+              style="width: 400px"
+            />
+          </div>
+        </div>
+        <div class="col-md-12">
+          <button id="botonOculto" type="submit" class="btn btn-primary">
+            Guardar y Continuar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Sección Vista Lateral -->
+<div id="contenedorFicha13" class="card mb-3 formulario-imprimible">
+  <div
+    class="card-header"
+    data-toggle="collapse"
+    data-target="#vistaLateral"
+    aria-expanded="true"
+  >
+    Vista Lateral
+    <i class="fas fa-chevron-up float-right"></i>
+    <button
+      type="button"
+      class="btn btn-danger btn-sm float-right mr-2"
+      onclick="eliminarContenedor13()"
+    >
+      Eliminar sección
+    </button>
+  </div>
+  <div id="vistaLateral" class="collapse show">
+    <div class="card-body">
+      <form
+        class="row g-3 needs-validation"
+        novalidate
+        id="miembroEvaluacionPostura1"
+      >
+        <div
+          class="form-group row col-md-12 mx-auto d-flex justify-content-center"
+        >
+          <div class="card-body col-md-6">
+            <table class="table table-bordered">
+              <thead>
+                <th colspan="2" class="text-center">Vista Lateral</th>
+                <tr>
+                  <th>Alineación corporal</th>
+                  <th>Observaciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Cabeza</td>
+                  <td>
+                    <input type="text" class="form-control" name="Cabeza_ob1" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Hombros</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="Hombros_ob1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Miembros Superiores</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="Miembros Superiores_ob1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Tronco</td>
+                  <td>
+                    <input type="text" class="form-control" name="Tronco_ob1" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Cadera</td>
+                  <td>
+                    <input type="text" class="form-control" name="Cadera_ob1" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Rodillas</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="Rodillas_ob1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Pies</td>
+                  <td>
+                    <input type="text" class="form-control" name="Pies_ob1" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-6 text-center">
+            <img
+              src="{{ url_for('static', filename='img/VistaLateral.jpg') }}"
+              class="img-fluid mt-5 mb-6"
+              alt="VistaLateral"
+              style="width: 400px"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Sección Vista Posterior -->
+<div id="contenedorFicha14" class="card mb-3 formulario-imprimible">
+  <div
+    class="card-header"
+    data-toggle="collapse"
+    data-target="#vistaPosterior"
+    aria-expanded="true"
+  >
+    Vista Posterior
+    <i class="fas fa-chevron-up float-right"></i>
+    <button
+      type="button"
+      class="btn btn-danger btn-sm float-right mr-2"
+      onclick="eliminarContenedor14()"
+    >
+      Eliminar sección
+    </button>
+  </div>
+  <div id="vistaPosterior" class="collapse show">
+    <div class="card-body">
+      <form
+        class="row g-3 needs-validation"
+        novalidate
+        id="miembroEvaluacionPostura2"
+      >
+        <div
+          class="form-group row col-md-12 mx-auto d-flex justify-content-center"
+        >
+          <div class="col-md-6">
+            <table class="table table-bordered">
+              <thead>
+                <th colspan="2" class="text-center">Vista Posterior</th>
+                <tr>
+                  <th>Alineación corporal</th>
+                  <th>Observaciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Cabeza</td>
+                  <td>
+                    <input type="text" class="form-control" name="Cabeza_ob2" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Hombros</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="Hombros_ob2"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Miembros Superiores</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="Miembros Superiores_ob2"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Tronco</td>
+                  <td>
+                    <input type="text" class="form-control" name="Tronco_ob2" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Cadera</td>
+                  <td>
+                    <input type="text" class="form-control" name="Cadera_ob2" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Rodillas</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="Rodillas_ob2"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Pies</td>
+                  <td>
+                    <input type="text" class="form-control" name="Pies_ob2" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-6 text-center">
+            <img
+              src="{{ url_for('static', filename='img/VistaPosterior.jpg') }}"
+              class="img-fluid mt-5 mb-6"
+              alt="VistaPosterior"
+              style="width: 400px"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Boton -->
+<div class="col-md-12">
+  <button id="botonVisible" type="submit" class="btn btn-primary">
+    Guardar y Continuar
+  </button>
+</div>
+
+<!-- Botón para enviar el PDF al backend -->
+<div class="col-md-12">
+  <button id="botonGuardarPDF" class="btn btn-secondary" disabled>
+    Guardar PDF
+  </button>
+</div>
+
+<script>
+  document
+    .getElementById("botonGuardarPDF")
+    .addEventListener("click", function () {
+      // Selecciona los formularios
+      const forms = document.querySelectorAll(".formulario-imprimible");
+      const collapseElements = document.querySelectorAll(".collapse");
+      collapseElements.forEach((collapse) => {
+        collapse.classList.add("show");
+      });
+
+      // Crea un contenedor temporal
+      const tempContainer = document.createElement("div");
+      const nombrePaciente = localStorage.getItem("nombrePaciente");
+
+      // Añadir estilos personalizados
+      const styles = `
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        color: #333;
+        margin: 20px;
+      }
+      h1 {
+        text-align: center;
+        font-size: 24px;
+        color: #003366;
+        border-bottom: 2px solid #003366;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      .card {
+        border: 2px solid #003366;
+        margin-bottom: 20px;
+        border-radius: 8px;
+      }
+      .card-header {
+        background-color: #003366;
+        color: white;
+        font-weight: bold;
+        padding: 10px;
+        font-size: 18px;
+      }
+      .card-body {
+        padding: 20px;
+        background-color: #f9f9f9;
+      }
+      .form-group label {
+        font-weight: bold;
+        color: #003366;
+      }
+      .form-control {
+        border: 1px solid #003366;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .btn-primary {
+        background-color: #003366;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        margin-top: 20px;
+      }
+      table {
+        width: 100%;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+      }
+      table, th, td {
+        border: 1px solid #003366;
+      }
+      th {
+        background-color: #003366;
+        color: white;
+        padding: 10px;
+        text-align: left;
+      }
+      td {
+        padding: 10px;
+        background-color: #fff;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .bold-text {
+        font-weight: bold;
+      }
+    </style>
+  `;
+      tempContainer.innerHTML = styles;
+
+      forms.forEach((form) => {
+        const clonedForm = form.cloneNode(true);
+        const inputs = form.querySelectorAll("input, select, textarea");
+        const clonedInputs = clonedForm.querySelectorAll(
+          "input, select, textarea"
+        );
+        inputs.forEach((input, index) => {
+          if (input.type === "checkbox" || input.type === "radio") {
+            clonedInputs[index].checked = input.checked;
+          } else {
+            clonedInputs[index].value = input.value;
+          }
+        });
+        tempContainer.appendChild(clonedForm);
+      });
+
+      // Generar el PDF con los estilos
+      html2pdf(tempContainer, {
+        margin: 1,
+        filename: "Evaluación de la postura.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+      })
+        .output("blob")
+        .then(function (pdfBlob) {
+          const formData = new FormData();
+          formData.append("pdf", pdfBlob, "Ficha.pdf");
+          formData.append("nombrePaciente", nombrePaciente);
+
+          // Enviar el PDF al backend
+          fetch("/guardar_pdf_Evaluacion_de_la_postura", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              // Simular clic en el botón con el id "botonVisible"
+              document.getElementById("botonVisible").click();
+            });
+        });
+    });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const botonGuardarPDF = document.getElementById("botonGuardarPDF");
+    const forms = document.querySelectorAll(".formulario-imprimible");
+
+    // Función para verificar si todos los campos están llenos
+    const verificarCamposLlenos = () => {
+      let todosLlenos = true;
+
+      // Iterar sobre todos los formularios
+      forms.forEach((form) => {
+        const inputs = form.querySelectorAll("input, textarea, select");
+        inputs.forEach((input) => {
+          if (
+            input.type === "checkbox" || input.type === "radio"
+              ? !input.checked
+              : !input.value.trim()
+          ) {
+            todosLlenos = false;
+          }
+        });
+      });
+
+      // Habilitar o deshabilitar el botón basado en la validación
+      botonGuardarPDF.disabled = !todosLlenos;
+    };
+
+    // Agregar eventos de escucha a los campos
+    forms.forEach((form) => {
+      const inputs = form.querySelectorAll("input, textarea, select");
+      inputs.forEach((input) => {
+        input.addEventListener("input", verificarCamposLlenos);
+        input.addEventListener("change", verificarCamposLlenos);
+      });
+    });
+
+    // Verificar inicialmente
+    verificarCamposLlenos();
+  });
+</script>
+
+{% endblock %}

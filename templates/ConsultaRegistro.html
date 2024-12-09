@@ -1,22 +1,31 @@
-{% extends './base.html' %}
-{% block title %}Consultar Registro{% endblock %}
-{% block body %}
-<button onclick="window.location.href='/Principal'" class="back-button btn btn-secondary mb-3">
+{% extends './base.html' %} {% block title %}Consultar Registro{% endblock %} {%
+block body %}
+<button
+  onclick="window.location.href='/Principal'"
+  class="back-button btn btn-primary mb-3"
+>
   <i class="fas fa-arrow-left"></i> Regresar
 </button>
 
 <div id="consultaRegistro">
   <div class="card shadow-sm p-4">
     <h4 class="card-title mb-4">Consulta de Registro</h4>
-    <form class="row g-3 needs-validation" method="GET" action="/ConsultaRegistro" novalidate id="fichaForm">
+    <form
+      class="row g-3 needs-validation"
+      method="GET"
+      action="/ConsultaRegistro"
+      novalidate
+      id="fichaForm"
+    >
       <div class="form-group col-md-3">
-        <label for="clasificacion">Nombre:</label>
-        <select class="form-control" id="clasificacion" name="nombre">
-          <option value="">Todos</option>
-          {% for clasificacion in clasificaciones %}
-          <option value="{{ clasificacion.0 }}">{{ clasificacion.0 }}</option>
-          {% endfor %}
-        </select>
+        <label for="nombre">Nombre:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="nombre"
+          name="nombre"
+          placeholder="Buscar por nombre"
+        />
       </div>
       <div class="form-group col-md-3">
         <label for="folio">Folio del paciente:</label>
@@ -31,7 +40,11 @@
         <button type="submit" class="btn btn-primary w-100">Filtrar</button>
       </div>
       <div class="form-group col-md-3">
-        <button type="button" class="btn btn-success w-100" onclick="window.location.href='/exportar_excel'">
+        <button
+          type="button"
+          class="btn btn-success w-100"
+          onclick="window.location.href='/exportar_excel'"
+        >
           Exportar
         </button>
       </div>
@@ -60,20 +73,28 @@
           <td>{{ registro.3 }}</td>
           <td>{{ registro.4 }}</td>
           <td>
-            <button class="btn btn-warning btn-sm" onclick="window.location.href='/EdicionRegistro?Id={{ registro.0 }}'">
+            <button
+              class="btn btn-warning btn-sm"
+              onclick="window.location.href='/EdicionRegistro?Id={{ registro.0 }}'"
+            >
               Editar
             </button>
           </td>
           <td>
-            {% set carpeta_pdf = registro.2 %}
-            {% if carpeta_pdf in pacientes_pdfs %}
-            {% for file in pacientes_pdfs[carpeta_pdf] %}
-            <a href="{{ url_for('descargar_pdf', nombre_paciente=carpeta_pdf, pdf_nombre=file) }}" class="btn btn-info btn-sm">
-              Descargar {{ file }}
-            </a>
-            {% endfor %}
+            {% set carpeta_pdf = registro.2 %} {% if carpeta_pdf in
+            pacientes_pdfs %}
+            <div class="d-flex flex-column gap-2">
+              {% for file in pacientes_pdfs[carpeta_pdf] %}
+              <a
+                href="{{ url_for('descargar_pdf', nombre_paciente=carpeta_pdf, pdf_nombre=file) }}"
+                class="btn btn-info btn-sm mb-1"
+              >
+                Descargar {{ file }}
+              </a>
+              {% endfor %}
+            </div>
             {% else %}
-            No PDF disponible
+            <span class="text-muted">No PDF disponible</span>
             {% endif %}
           </td>
         </tr>
@@ -102,8 +123,10 @@
     font-size: 14px;
   }
 
-  .table th, .table td {
-    vertical-align: middle;
+  .table th,
+  .table td {
+    text-align: center; /* Centrar texto horizontalmente */
+    vertical-align: middle; /* Centrar texto verticalmente */
   }
 
   .table-responsive {
@@ -129,5 +152,14 @@
   .btn-info:hover {
     background-color: #138496;
     border-color: #0c6f82;
+  }
+
+  .table td .btn {
+    margin-bottom: 0.5rem; /* Espaciado entre botones */
+  }
+
+  .text-muted {
+    font-style: italic;
+    color: #6c757d; /* Color gris sutil */
   }
 </style>

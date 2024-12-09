@@ -132,7 +132,7 @@ document
   .addEventListener("submit", function (event) {
     event.preventDefault();
     guardarDatosFicha();
-    window.location.href = "/MiembroSuperior"; // Redirige a la siguiente página
+    window.location.href = "/EdicionMiembroSuperior"; // Redirige a la siguiente página
   });
 
 document.querySelectorAll("input, select, textarea").forEach((element) => {
@@ -149,25 +149,6 @@ botonVisible.addEventListener("click", function () {
 });
 
 // ----------------------------------------------------------------
-document.addEventListener("DOMContentLoaded", function () {
-  function generarFolioAleatorio() {
-    const fecha = new Date();
-    const año = fecha.getFullYear().toString().slice(-2); // Últimos 2 dígitos del año
-    const dia = fecha.getDate().toString().padStart(2, "0"); // Día en formato DD
-    const numeroAleatorio = Math.floor(10 + Math.random() * 90).toString(); // Número aleatorio de 2 dígitos
-
-    return año + dia + numeroAleatorio; // Genera un folio de 6 dígitos
-  }
-
-  function asignarFolio() {
-    const folio = generarFolioAleatorio();
-    document.getElementById("folio").value = folio;
-  }
-
-  asignarFolio();
-});
-
-// ------------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", function () {
   // Función para guardar los datos del formulario en localStorage
   function saveFormData() {
@@ -427,3 +408,384 @@ document.addEventListener("DOMContentLoaded", function () {
   const localDate = `${year}-${month}-${day}`;
   fechaElaboracion.value = localDate; // Asigna la fecha en formato local
 });
+
+// Función para establecer el valor de un campo de texto o marcar un checkbox
+const establecerValor = (id, valor) => {
+  const elemento =
+    document.getElementById(id) ||
+    document.querySelector(`input[name="${id}"]`);
+  if (elemento) {
+    if (elemento.type === "checkbox") {
+      elemento.checked = valor === 1; // Marcar o desmarcar el checkbox
+    } else {
+      elemento.value = valor || "No hay información";
+    }
+  }
+};
+
+// Consultar el Id desde el localStorage
+const id = localStorage.getItem("Id");
+
+console.log("El Id almacenado es:", id);
+
+if (id) {
+  fetch("/consultar", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.error) {
+        console.error("Error desde el servidor:", data.error);
+        return;
+      }
+
+      console.log("Datos recibidos:", data);
+
+      // Función para formatear fechas en formato YYYY-MM-DD
+      function formatearFechaParaInputDate(fecha) {
+        if (!fecha) return ""; // Manejar valores nulos o indefinidos
+        const fechaObj = new Date(fecha);
+        const anio = fechaObj.getFullYear();
+        const mes = String(fechaObj.getMonth() + 1).padStart(2, "0");
+        const dia = String(fechaObj.getDate()).padStart(2, "0");
+        return `${anio}-${mes}-${dia}`;
+      }
+
+      // Datos de ficha_identificaciones
+      establecerValor(
+        "fecha",
+        formatearFechaParaInputDate(data.fecha_elaboracion)
+      );
+      establecerValor("folio", data.folio);
+      establecerValor("nombrePaciente", data.nombre_paciente);
+      establecerValor("sexo", data.genero);
+      establecerValor(
+        "fechaNacimiento",
+        formatearFechaParaInputDate(data.fecha_nacimiento)
+      );
+      establecerValor("edad", data.edad);
+      establecerValor("lugarNacimiento", data.lugar_nacimiento);
+      establecerValor("civil", data.estado_civil);
+      establecerValor("ocupacion", data.ocupacion);
+      establecerValor("nacionalidad", data.nacionalidad);
+      establecerValor("domicilio", data.domicilio_actual);
+      establecerValor("telefono", data.telefono);
+      establecerValor(
+        "nombreContactoEmergencia",
+        data.contacto_emergencia_nombre
+      );
+      establecerValor("telefonoEmergencia", data.contacto_emergencia_telefono);
+      establecerValor("diagnosticoMedico", data.diagnostico_medico);
+      establecerValor("elaboroHistorial", data.elaboro_historial_clinico);
+      establecerValor("motivoConsulta", data.motivo_consulta);
+
+      // Datos de antecedentespersonalesnopatologicos
+      establecerValor("tipocasa", data.PropiaRenta);
+      establecerValor("ventilacion", data.Ventilacion);
+      establecerValor("iluminacion", data.Iluminacion);
+      establecerValor("piso", data.Piso);
+      establecerValor("electrodomesticos", data.Electrodomesticos);
+      establecerValor("Servicios", data.Servicios);
+      establecerValor("DescripcionVivienda", data.DescripcionVivienda);
+      establecerValor("comidasxdia", data.NoComidasDia);
+      establecerValor("aguaLts", data.AguaLts);
+      establecerValor("gruposAlimenticios", data.GruposAlimenticios);
+      establecerValor(
+        "descripRutinaAlimentaria",
+        data.DescripcionRutinaAlimenticia
+      );
+      establecerValor("higieneBucal", data.HigieneBucal);
+      establecerValor("bañosxdia", data.BanosDia);
+      establecerValor("cambiosRopa", data.CambiosRopa);
+      establecerValor("actFisica", data.ActividadFisica);
+      establecerValor("deporte", data.Deporte);
+      establecerValor("ocio", data.Ocio);
+      establecerValor("ocupacion1", data.Ocupacion);
+    })
+    .catch((error) => {
+      console.error("Error al consultar los datos:", error);
+    });
+} else {
+  console.error("No se encontró un ID en el localStorage");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if (id) {
+  fetch("/consultarAntecedentesHeredoFamiliares", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.error) {
+        console.error("Error desde el servidor:", data.error);
+        return;
+      }
+
+      console.log("Datos recibidos:", data);
+
+      // Actualizar los campos del DOM con los datos obtenidos
+      data.forEach((antecedente) => {
+        const {
+          enfermedad,
+          si,
+          no,
+          parentesco,
+          vivo,
+          muerto,
+          otro,
+          observaciones,
+        } = antecedente;
+
+        // Actualizar valores de los checkboxes
+        establecerValor(`${enfermedad}_si`, si);
+        establecerValor(`${enfermedad}_no`, no);
+        establecerValor(`${enfermedad}_vivo`, vivo);
+        establecerValor(`${enfermedad}_muerto`, muerto);
+
+        // Actualizar valores de los campos de texto
+        establecerValor(`${enfermedad}_parentesco`, parentesco);
+        establecerValor("otros", otro);
+        establecerValor("observaciones", observaciones);
+      });
+    })
+    .catch((error) => {
+      console.error("Error al consultar los datos:", error);
+    });
+} else {
+  console.error("No se encontró un ID en el localStorage");
+}
+
+if (id) {
+  fetch("/consultarAntecedentesPatologicos", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.error) {
+        console.error("Error desde el servidor:", data.error);
+        return;
+      }
+
+      console.log("Datos recibidos:", data);
+
+      // Actualizar los campos en el DOM con los datos obtenidos
+      data.forEach((patologia) => {
+        const {
+          patologia: nombrePatologia,
+          si,
+          no,
+          edad_presentacion,
+          secuelas_complicaciones,
+          inmunizaciones,
+          observaciones,
+        } = patologia;
+
+        // Actualizar valores de los checkboxes
+        establecerValor(`${nombrePatologia}_si`, si);
+        establecerValor(`${nombrePatologia}_no`, no);
+
+        // Actualizar valores de los campos de texto
+        establecerValor(`${nombrePatologia}_edad`, edad_presentacion);
+        establecerValor(`${nombrePatologia}_secuelas`, secuelas_complicaciones);
+        establecerValor("inmunizaciones", inmunizaciones);
+        establecerValor("observaciones_ante", observaciones);
+      });
+    })
+    .catch((error) => {
+      console.error("Error al consultar los datos:", error);
+    });
+} else {
+  console.error("No se encontró un ID en el localStorage");
+}
+
+if (id) {
+  fetch("/consultarAntecedentesGinecobstetricos", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.error) {
+        console.error("Error desde el servidor:", data.error);
+        return;
+      }
+
+      console.log("Datos recibidos:", data);
+
+      // Función para formatear fechas en formato YYYY-MM-DD
+      function formatearFechaParaInputDate(fecha) {
+        if (!fecha) return ""; // Manejar valores nulos o indefinidos
+        const fechaObj = new Date(fecha);
+        const anio = fechaObj.getFullYear();
+        const mes = String(fechaObj.getMonth() + 1).padStart(2, "0");
+        const dia = String(fechaObj.getDate()).padStart(2, "0");
+        return `${anio}-${mes}-${dia}`;
+      }
+
+      // Actualizar los campos en el DOM con los datos obtenidos
+      establecerValor("menarquia", data.menarquia);
+      establecerValor("ultimaMenstruacion", formatearFechaParaInputDate(data.fecha_ultima_menstruacion));
+      establecerValor(
+        "caracteristicasMenstruacion",
+        data.caracteristicas_menstruacion
+      );
+      establecerValor("inicioVidaSexual", formatearFechaParaInputDate(data.inicio_vida_sexual));
+      establecerValor("usoAnticonceptivos", data.uso_anticonceptivos);
+      establecerValor("numEmbarazos", data.numero_embarazos);
+      establecerValor("numPartos", data.numero_partos);
+      establecerValor("numCesareas", data.numero_cesareas);
+      establecerValor("observacionesGine", data.observaciones);
+    })
+    .catch((error) => {
+      console.error("Error al consultar los datos:", error);
+    });
+} else {
+  console.error("No se encontró un ID en el localStorage");
+}
+
+if (id) {
+  fetch("/consultarPadecimientoActual", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.error) {
+        console.error("Error desde el servidor:", data.error);
+        return;
+      }
+
+      console.log("Datos recibidos:", data);
+
+      // Actualizar el campo en el DOM con los datos obtenidos
+      establecerValor("describe", data.descripcion);
+    })
+    .catch((error) => {
+      console.error("Error al consultar los datos:", error);
+    });
+} else {
+  console.error("No se encontró un ID en el localStorage");
+}
+
+if (id) {
+  fetch("/consultarExploracion", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.error) {
+        console.error("Error desde el servidor:", data.error);
+        return;
+      }
+
+      console.log("Datos recibidos:", data);
+
+      // Actualizar los campos en el DOM con los datos obtenidos
+      establecerValor("habitusExte", data.habitus_exterior);
+      establecerValor("peso", data.peso);
+      establecerValor("talla", data.altura);
+      establecerValor("tensionArterial", data.imc);
+      establecerValor("temperatura", data.temperatura);
+      establecerValor("frecuenciaCardiaca", data.pulso_cardiaco);
+      establecerValor("frecuenciaRespiratoria", data.frecuencia_respiratoria);
+      establecerValor("presionArterial", data.presion_arterial);
+      establecerValor("saturacion_de_oxígeno", data.saturacion_oxigeno);
+      establecerValor("observacionesexplofisica", data.observaciones);
+      establecerValor(
+        "resultadospreviosyactuales",
+        data.resultados_previos_actuales
+      );
+    })
+    .catch((error) => {
+      console.error("Error al consultar los datos:", error);
+    });
+} else {
+  console.error("No se encontró un ID en el localStorage");
+}

@@ -37,10 +37,1255 @@ usuarios = {
     "usuario@example.com": generate_password_hash("12345"),
     "prueba@correo.com": generate_password_hash("contraseña")
 }
+
+
+# Ruta para consultar los datos por ID
+@app.route('/consultar', methods=['POST'])
+def consultar():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+
+        # Consulta a ficha_identificaciones
+        query1 = """
+        SELECT id, fecha_elaboracion, folio, nombre_paciente, genero, fecha_nacimiento, edad, lugar_nacimiento, 
+               estado_civil, ocupacion, nacionalidad, domicilio_actual, telefono, contacto_emergencia_nombre, 
+               contacto_emergencia_telefono, diagnostico_medico, elaboro_historial_clinico, motivo_consulta
+        FROM ficha_identificaciones
+        WHERE id = %s
+        """
+        cursor.execute(query1, (id_recibido,))
+        result1 = cursor.fetchone()
+
+        # Consulta a antecedentespersonalesnopatologicos
+        query2 = """
+        SELECT id_ficha, PropiaRenta, Ventilacion, Iluminacion, Piso, Electrodomesticos, Servicios, 
+               DescripcionVivienda, NoComidasDia, AguaLts, GruposAlimenticios, DescripcionRutinaAlimenticia, 
+               HigieneBucal, BanosDia, CambiosRopa, ActividadFisica, Deporte, Ocio, Ocupacion
+        FROM antecedentespersonalesnopatologicos
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query2, (id_recibido,))
+        result2 = cursor.fetchone()
+
+        if result1 or result2:
+            # Combinar los resultados de ambas consultas
+            combined_result = {}
+            if result1:
+                combined_result.update(result1)
+            if result2:
+                combined_result.update(result2)
+            return jsonify(combined_result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarAntecedentesHeredoFamiliares', methods=['POST'])
+def consultar_antecedentes_heredo_familiares():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            enfermedad, si, no, parentesco, vivo, muerto, otro, observaciones
+        FROM antecedentesheredofamiliares
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarAntecedentesPatologicos', methods=['POST'])
+def consultar_antecedentes_patologicos():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            patologia, si, no, edad_presentacion, secuelas_complicaciones, inmunizaciones, observaciones
+        FROM antecedentes_patologicos
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarAntecedentesGinecobstetricos', methods=['POST'])
+def consultar_antecedentes_ginecobstetricos():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            menarquia, fecha_ultima_menstruacion, caracteristicas_menstruacion, inicio_vida_sexual, 
+            uso_anticonceptivos, numero_embarazos, numero_partos, numero_cesareas, observaciones
+        FROM antecedentes_ginecobstetricos
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchone()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+@app.route('/consultarPadecimientoActual', methods=['POST'])
+def consultar_padecimiento_actual():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT descripcion
+        FROM antecedentes_padecimientoactual
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchone()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+@app.route('/consultarExploracion', methods=['POST'])
+def consultar_exploracion():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            habitus_exterior, peso, altura, imc, temperatura, pulso_cardiaco, frecuencia_respiratoria, 
+            presion_arterial, saturacion_oxigeno, observaciones, resultados_previos_actuales
+        FROM exploracion
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchone()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+@app.route('/consultar_notas', methods=['POST'])
+def consultar_notas():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+
+        # Consulta a la tabla notas_seguimientos
+        query = """
+        SELECT id_ficha, nombre, diagnostico, folio, fecha, numero_sesion, notas, sugerencias_observaciones, nombreYfirma_tratante
+        FROM notas_seguimientos
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        resultados = cursor.fetchall()
+
+        if resultados:
+            return jsonify({"datos": resultados})
+        else:
+            return jsonify({"error": "No se encontraron registros para el ID proporcionado"}), 404
+
+    except mysql.connector.Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+@app.route('/consultar_plan_tratamiento', methods=['POST'])
+def consultar_plan_tratamiento():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+
+        # Consulta a la tabla plan_tratamientos
+        query = """
+        SELECT id_ficha, objetivo, modalidad_terapeutica AS modalidad, descripcion, dosis
+        FROM plan_tratamientos
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        resultados = cursor.fetchall()
+
+        if resultados:
+            return jsonify({"datos": resultados})
+        else:
+            return jsonify({"error": "No se encontraron registros para el ID proporcionado"}), 404
+
+    except mysql.connector.Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+@app.route('/consultarMiembrosSuperiores', methods=['POST'])
+def consultar_miembros_superiores():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            observacion AS observacionesMiembrosSuperiores, 
+            palpacion AS palpacionMiembrosSuperiores, 
+            descripcion AS dolorSuperiorMiembrosSuperiores, 
+            dolor AS dolorexplofisicaMiembrosSuperiores
+        FROM partes_cuerpo_miembro_superior
+        WHERE id_ficha = %s AND id_partes = 1
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchone()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+@app.route('/consultarFuerzaMuscularMiembrosSuperiores', methods=['POST'])
+def consultar_fuerza_muscular_miembros_superiores():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            movimiento, izquierda AS izquierdo, derecha AS derecho
+        FROM fuerza_muscular_miembro_superior
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarGoniometriaMiembrosSuperiores', methods=['POST'])
+def consultar_goniometria_miembros_superiores():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            rango_normal AS rango, 
+            movimiento, 
+            izquierdo, 
+            derecho
+        FROM goniometria_miembro_superior
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarReflejosOsteotendinosos', methods=['POST'])
+def consultar_reflejos_osteotendinosos():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            rot AS reflejo, 
+            izq AS izquierdo, 
+            der AS derecho
+        FROM reflejososteotendinosos_miembro_superior
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarPruebasEvaluacionesComplementarias', methods=['POST'])
+def consultar_pruebas_evaluaciones_complementarias():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            pruebas AS prueba, 
+            resultadosyanalisis AS resultado
+        FROM pruebasevaluacionescomplementarias_miembro_superior
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarMiembrosInferiores', methods=['POST'])
+def consultar_miembros_inferiores():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            observacion AS observacionesMiembrosInferiores, 
+            palpacion AS palpacionMiembrosInferiores, 
+            descripcion AS dolorSuperiorMiembrosInferiores, 
+            dolor AS dolorexplofisicaMiembrosInferiores
+        FROM partes_cuerpo_miembro_inferior
+        WHERE id_ficha = %s AND id_partes = 2
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchone()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarFuerzaMuscularMiembrosInferiores', methods=['POST'])
+def consultar_fuerza_muscular_miembros_inferiores():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            movimiento, 
+            izquierda, 
+            derecha
+        FROM fuerza_muscular_miembro_inferior
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+@app.route('/consultarGoniometriaMiembrosInferiores', methods=['POST'])
+def consultar_goniometria_miembros_inferiores():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            rango_normal AS rango, 
+            movimiento, 
+            izquierdo, 
+            derecho
+        FROM goniometria_miembro_inferior
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarReflejosOsteotendinososMiembrosInferiores', methods=['POST'])
+def consultar_reflejos_osteotendinosos_miembros_inferiores():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            rot AS reflejo, 
+            izq AS izquierdo, 
+            der AS derecho
+        FROM reflejososteotendinosos_miembro_inferior
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarPruebasEvaluacionesComplementariasInferiores', methods=['POST'])
+def consultar_pruebas_evaluaciones_complementarias_inferiores():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            pruebas AS prueba, 
+            resultadosyanalisis AS resultado
+        FROM pruebasevaluacionescomplementarias_miembro_inferior
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarCicloMarchaMiembrosInferiores', methods=['POST'])
+def consultar_ciclo_marcha_miembros_inferiores():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            fase_apoyo_completo AS faseApoyoCompleto,
+            contacto_talon_izquierdo AS contactoTalonIzquierdo,
+            contacto_talon_derecho AS contactoTalonDerecho,
+            apoyo_plantar_izquierdo AS apoyoPlantarIzquierdo,
+            apoyo_plantar_derecho AS apoyoPlantarDerecho,
+            apoyo_medio_izquierdo AS apoyoMedioIzquierdo,
+            apoyo_medio_derecho AS apoyoMedioDerecho,
+            fase_oscilacion_completo AS faseOscilacionCompleto,
+            balanceo_inicial_izquierdo AS balanceoInicialIzquierdo,
+            balanceo_inicial_derecho AS balanceoInicialDerecho,
+            balanceo_medio_izquierdo AS balanceoMedioIzquierdo,
+            balanceo_medio_derecho AS balanceoMedioDerecho,
+            balanceo_terminal_izquierdo AS balanceoTerminalIzquierdo,
+            balanceo_terminal_derecho AS balanceoTerminalDerecho,
+            rotacion_pelvica_completo AS rotacionPelvicaCompleto,
+            inclinacion_pelvica_completo AS inclinacionPelvicaCompleto,
+            flexion_rodilla_izquierdo AS flexionRodillaIzquierdo,
+            flexion_rodilla_derecho AS flexionRodillaDerecho,
+            movimientos_coordinados_rodilla_tobillo_izquierdo AS movimientosCoordinadosRodillaTobilloIzquierdo,
+            movimientos_coordinados_rodilla_tobillo_derecho AS movimientosCoordinadosRodillaTobilloDerecho,
+            movimiento_centro_gravedad_completo AS movimientoCentroGravedadCompleto,
+            cadencia_completo AS cadenciaCompleto,
+            balanceo_ms_completo AS balanceoMSCompleto
+        FROM ciclo_marcha_miembro_inferior
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchone()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarCabezaCuello', methods=['POST'])
+def consultar_cabeza_cuello():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            observacion AS observacionesCabezaCuello, 
+            palpacion AS palpacionCabezaCuello, 
+            descripcion AS dolorSuperiorCabezaCuello, 
+            dolor AS dolorexplofisicaCabezaCuello
+        FROM partes_cuerpo_cabeza_y_torax
+        WHERE id_ficha = %s AND id_partes = 3
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchone()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarFuerzaMuscularCabezaTorax', methods=['POST'])
+def consultar_fuerza_muscular_cabeza_torax():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            movimiento, 
+            valores_obtenidos AS valoresObtenidos
+        FROM fuerza_muscular_cabeza_y_torax
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarColumnaToraxAbdomen', methods=['POST'])
+def consultar_columna_torax_abdomen():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            observacion AS observacionesColumnaTóraxAbdomen, 
+            palpacion AS palpacionColumnaTóraxAbdomen, 
+            descripcion AS dolorSuperiorColumnaTóraxAbdomen, 
+            dolor AS dolorexplofisicaColumnaTóraxAbdomen
+        FROM partes_cuerpo_cabeza_y_torax1
+        WHERE id_ficha = %s AND id_partes = 4
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchone()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarFuerzaMuscularCabezaTorax2', methods=['POST'])
+def consultar_fuerza_muscular_cabeza_torax2():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            movimiento, 
+            valores_obtenidos AS valoresObtenidos
+        FROM fuerza_muscular_cabeza_y_torax1
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarGoniometriaCabezaTorax', methods=['POST'])
+def consultar_goniometria_cabeza_torax():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            rangos_normales AS rango, 
+            movimientos AS movimiento, 
+            resultados
+        FROM goniometria_cabeza_y_torax
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarPruebasEvaluacionesComplementariasCabezaTorax', methods=['POST'])
+def consultar_pruebas_evaluaciones_complementarias_cabeza_torax():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            pruebas AS prueba, 
+            resultadosyanalisis AS resultado
+        FROM pruebasevaluacionescomplementarias_cabeza_y_torax
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarVistaFrontal', methods=['POST'])
+def consultar_vista_frontal():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            alineacion_corporal AS alineacionCorporal, 
+            observaciones AS ObservacionesvistaFrontal
+        FROM vistafrontal
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarVistaLateral', methods=['POST'])
+def consultar_vista_lateral():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            alineacion_corporal AS alineacionCorporal1, 
+            observaciones AS ObservacionesvistaLateral
+        FROM vistalateral
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+@app.route('/consultarVistaPosterior', methods=['POST'])
+def consultar_vista_posterior():
+    data = request.get_json()
+    id_recibido = data.get('id')
+
+    if not id_recibido:
+        return jsonify({"error": "ID no proporcionado"}), 400
+
+    connection = create_connection()
+    if connection is None:
+        return jsonify({"error": "Error al conectar a la base de datos"}), 500
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+        SELECT 
+            alineacion_corporal AS alineacionCorporal2, 
+            observaciones AS ObservacionesvistaPosterior
+        FROM vistaposterior
+        WHERE id_ficha = %s
+        """
+        cursor.execute(query, (id_recibido,))
+        result = cursor.fetchall()
+
+        if result:
+            return jsonify(result)
+        else:
+            return jsonify({"error": "No se encontraron datos para el ID proporcionado"}), 404
+
+    except Error as e:
+        return jsonify({"error": f"Error al realizar la consulta: {e}"}), 500
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()         
+            
+            
+            
+            
+            
+            
+            
+
+
+            
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+            
+            
+ 
+ 
+ 
+ 
+ 
+ 
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 @app.route('/EdicionRegistro')
 def EdicionRegistro():
     return render_template('EdicionRegistro.html', current_page='EdicionRegistro')
+
+@app.route('/EdicionFicha')
+def EdicionFicha():
+    return render_template('EdicionFicha.html', current_page='EdicionFicha')
+
+@app.route('/EdicionNotasSeguimiento')
+def EdicionNotasSeguimiento():
+    return render_template('EdicionNotasSeguimiento.html', current_page='EdicionNotasSeguimiento')
+
+@app.route('/EdicionPlanDiagnostico')
+def EdicionPlanDiagnostico():
+    return render_template('EdicionPlanDiagnostico.html', current_page='EdicionPlanDiagnostico')
+
+@app.route('/EdicionMiembroSuperior')
+def EdicionMiembroSuperior():
+    return render_template('EdicionMiembroSuperior.html', current_page='EdicionMiembroSuperior')
+
+@app.route('/EdicionMiembroInferior')
+def EdicionMiembroInferior():
+    return render_template('EdicionMiembroInferior.html', current_page='EdicionMiembroInferior')
+
+@app.route('/EdicionCabezaTorax')
+def EdicionCabezaTorax():
+    return render_template('EdicionCabezaTorax.html', current_page='EdicionCabezaTorax')
+
+@app.route('/EdicionEvaluacionDeLaPostura')
+def EdicionEvaluacionDeLaPostura():
+    return render_template('EdicionEvaluacionDeLaPostura.html', current_page='EdicionEvaluacionDeLaPostura')
             
 @app.route('/Principal')
 def principal():
@@ -148,7 +1393,7 @@ def generar_id_ficha_unico(cursor):
         dia = time.strftime("%d")   # Día en formato DD
 
         # Generar un número aleatorio de 2 dígitos
-        aleatorio = random.randint(10, 99)
+        aleatorio = random.randint(1000, 9999)
 
         # Crear el identificador basado en año, día y número aleatorio
         id_ficha = f"{año}{dia}{aleatorio}"
@@ -350,32 +1595,6 @@ def guardar_pdf_Notas_de_seguimiento_modificado():
     pdf_file.save(pdf_path)
 
     return jsonify({'message': f'PDF guardado en: {pdf_path}'}), 200
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
-
-
-
-
 
 # Redirige a la página de inicio de sesión si no se ha iniciado sesión
 @app.before_request
@@ -677,17 +1896,569 @@ def usuario_info():
         "rol": rol
     }), 200
 
+@app.route('/actualizar_datos', methods=['PUT'])
+def actualizar_datos():
+    data = request.get_json()
+    id_ficha1 = data.get('id')  # ID proporcionado desde el frontend
 
+    if not id_ficha1:
+        return jsonify({'success': False, 'error': 'ID no proporcionado'}), 400
 
+    try:
+        connection = create_connection()
+        cursor = connection.cursor()
 
+        # Actualización en la tabla ficha_identificaciones
+        actualizar_ficha_identificaciones = """
+        UPDATE ficha_identificaciones SET
+            fecha_elaboracion = %s, folio = %s, nombre_paciente = %s, genero = %s, 
+            fecha_nacimiento = %s, edad = %s, lugar_nacimiento = %s, estado_civil = %s, 
+            ocupacion = %s, nacionalidad = %s, domicilio_actual = %s, telefono = %s, 
+            contacto_emergencia_nombre = %s, contacto_emergencia_telefono = %s, 
+            diagnostico_medico = %s, elaboro_historial_clinico = %s, motivo_consulta = %s
+        WHERE id = %s
+        """
+        cursor.execute(actualizar_ficha_identificaciones, (
+            data.get('fechaElaboracion'),
+            data.get('folio'),
+            data.get('nombrePaciente'),
+            data.get('sexo'),
+            data.get('fechaNacimiento'),
+            data.get('edad'),
+            data.get('lugarNacimiento'),
+            data.get('estadoCivil'),
+            data.get('ocupacion'),
+            data.get('nacionalidad'),
+            data.get('domicilioActual'),
+            data.get('telefono'),
+            data.get('nombreContactoEmergencia'),
+            data.get('telefonoEmergencia'),
+            data.get('diagnosticoMedico'),
+            data.get('elaboroHistorial'),
+            data.get('motivoConsulta'),
+            id_ficha1
+        ))
 
+        # Actualización en la tabla antecedentespersonalesnopatologicos
+        actualizar_antecedentes_no_patologicos = """
+        UPDATE antecedentespersonalesnopatologicos SET
+            PropiaRenta = %s, Ventilacion = %s, Iluminacion = %s, Piso = %s, 
+            Electrodomesticos = %s, Servicios = %s, DescripcionVivienda = %s, 
+            NoComidasDia = %s, AguaLts = %s, GruposAlimenticios = %s, 
+            DescripcionRutinaAlimenticia = %s, HigieneBucal = %s, BanosDia = %s, 
+            CambiosRopa = %s, ActividadFisica = %s, Deporte = %s, Ocio = %s, Ocupacion = %s
+        WHERE id_ficha = %s
+        """
+        cursor.execute(actualizar_antecedentes_no_patologicos, (
+            data.get('PropiaRenta'),
+            data.get('Ventilacion'),
+            data.get('Iluminacion'),
+            data.get('Piso'),
+            data.get('Electrodomesticos'),
+            data.get('Servicios'),
+            data.get('DescripcionVivienda'),
+            data.get('NoComidasDia'),
+            data.get('AguaLts'),
+            data.get('GruposAlimenticios'),
+            data.get('DescripcionRutinaAlimenticia'),
+            data.get('HigieneBucal'),
+            data.get('BanosDia'),
+            data.get('CambiosRopa'),
+            data.get('ActividadFisica'),
+            data.get('Deporte'),
+            data.get('Ocio'),
+            data.get('Ocupacion1'),
+            id_ficha1
+        ))
 
+        # Actualizar antecedentesheredofamiliares (ejemplo para listas)
+        cursor.execute("DELETE FROM antecedentesheredofamiliares WHERE id_ficha = %s", (id_ficha1,))
+        for antecedente in data.get('antecedentes', []):
+            cursor.execute("""
+            INSERT INTO antecedentesheredofamiliares (
+                id_ficha, enfermedad, si, no, parentesco, vivo, muerto, otro, observaciones
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (
+                id_ficha1,
+                antecedente.get('enfermedad'),
+                antecedente.get('si'),
+                antecedente.get('no'),
+                antecedente.get('parentesco'),
+                antecedente.get('vivo'),
+                antecedente.get('muerto'),
+                antecedente.get('otro'),
+                antecedente.get('observaciones')
+            ))
 
+        # Actualización en la tabla antecedentes_patologicos
+        cursor.execute("DELETE FROM antecedentes_patologicos WHERE id_ficha = %s", (id_ficha1,))
+        for patologia in data.get('datosPatologicos', []):
+            insertar_antecedentes_patologicos = """
+            INSERT INTO antecedentes_patologicos (
+                id_ficha, patologia, si, no, edad_presentacion, secuelas_complicaciones, inmunizaciones, observaciones
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            cursor.execute(insertar_antecedentes_patologicos, (
+                id_ficha1,
+                patologia.get('patologia'),
+                patologia.get('si_pa'),
+                patologia.get('no_pa'),
+                patologia.get('edad_presento'),
+                patologia.get('secuela'),
+                patologia.get('inmunizaciones'),
+                patologia.get('observaciones1')
+            ))
 
+        # Actualización en la tabla antecedentes_ginecobstetricos
+        actualizar_ginecobstetricos = """
+        UPDATE antecedentes_ginecobstetricos SET
+            menarquia = %s, fecha_ultima_menstruacion = %s, caracteristicas_menstruacion = %s, 
+            inicio_vida_sexual = %s, uso_anticonceptivos = %s, numero_embarazos = %s, 
+            numero_partos = %s, numero_cesareas = %s, observaciones = %s
+        WHERE id_ficha = %s
+        """
+        cursor.execute(actualizar_ginecobstetricos, (
+            data.get('menarquia'),
+            data.get('fecha_ultima_menstruacion'),
+            data.get('caracteristicas_menstruacion'),
+            data.get('inicio_vida_sexual'),
+            data.get('uso_anticonceptivos'),
+            data.get('numero_embarazos'),
+            data.get('numero_partos'),
+            data.get('numero_cesareas'),
+            data.get('observaciones_gine'),
+            id_ficha1
+        ))
 
+        # Actualización en la tabla antecedentes_padecimientoactual
+        actualizar_padecimientoactual = """
+        UPDATE antecedentes_padecimientoactual SET
+            descripcion = %s
+        WHERE id_ficha = %s
+        """
+        cursor.execute(actualizar_padecimientoactual, (
+            data.get('ac_descripcion'),
+            id_ficha1
+        ))
 
+        # Actualización en la tabla exploracion
+        actualizar_exploracion = """
+        UPDATE exploracion SET
+            habitus_exterior = %s, peso = %s, altura = %s, imc = %s, 
+            temperatura = %s, pulso_cardiaco = %s, frecuencia_respiratoria = %s, 
+            presion_arterial = %s, saturacion_oxigeno = %s, observaciones = %s, 
+            resultados_previos_actuales = %s
+        WHERE id_ficha = %s
+        """
+        cursor.execute(actualizar_exploracion, (
+            data.get('habitus_exterior'),
+            data.get('peso'),
+            data.get('altura'),
+            data.get('imc'),
+            data.get('temperatura'),
+            data.get('pulso_cardiaco'),
+            data.get('frecuencia_respiratoria'),
+            data.get('presion_arterial'),
+            data.get('saturacion_oxigeno'),
+            data.get('observaciones2'),
+            data.get('resultados_previos_actuales'),
+            id_ficha1
+        ))
+# -------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        
+        # Actualización en la tabla partes_cuerpo_miembro_superior
+        actualizar_miembro_superior = """
+        UPDATE partes_cuerpo_miembro_superior SET
+            id_partes = %s, observacion = %s, palpacion = %s, descripcion = %s, dolor = %s
+        WHERE id_ficha = %s
+        """
+        cursor.execute(actualizar_miembro_superior, (
+            1,
+            data.get('observacionesMiembrosSuperiores'),
+            data.get('palpacionMiembrosSuperiores'),
+            data.get('dolorSuperiorMiembrosSuperiores'),
+            data.get('dolorexplofisicaMiembrosSuperiores'),
+            id_ficha1
+        ))
+
+        # Actualización en la tabla fuerza_muscular_miembro_superior
+        cursor.execute("DELETE FROM fuerza_muscular_miembro_superior WHERE id_ficha = %s", (id_ficha1,))
+        for movimiento in data.get('fuerzaMuscularMiembrosSuperiores', []):
+            insertar_fuerza_muscular = """
+            INSERT INTO fuerza_muscular_miembro_superior (
+                id_ficha, derecha, movimiento, izquierda
+            ) VALUES (%s, %s, %s, %s)
+            """
+            cursor.execute(insertar_fuerza_muscular, (
+                id_ficha1,
+                movimiento.get('derecho'),
+                movimiento.get('movimiento'),
+                movimiento.get('izquierdo')
+            ))
+
+        # Actualización en la tabla goniometria_miembro_superior
+        cursor.execute("DELETE FROM goniometria_miembro_superior WHERE id_ficha = %s", (id_ficha1,))
+        for goniometria in data.get('goniometriaMiembrosSuperiores', []):
+            insertar_goniometria = """
+            INSERT INTO goniometria_miembro_superior (
+                id_ficha, rango_normal, izquierdo, movimiento, derecho
+            ) VALUES (%s, %s, %s, %s, %s)
+            """
+            cursor.execute(insertar_goniometria, (
+                id_ficha1,
+                goniometria.get('rango'),
+                goniometria.get('izquierdo'),
+                goniometria.get('movimiento'),
+                goniometria.get('derecho')
+            ))
+
+        # Actualización en la tabla reflejososteotendinosos_miembro_superior
+        cursor.execute("DELETE FROM reflejososteotendinosos_miembro_superior WHERE id_ficha = %s", (id_ficha1,))
+        for reflejo in data.get('reflejosOsteotendinososMiembrosSuperiores', []):
+            insertar_reflejo = """
+            INSERT INTO reflejososteotendinosos_miembro_superior (
+                id_ficha, izq, rot, der
+            ) VALUES (%s, %s, %s, %s)
+            """
+            cursor.execute(insertar_reflejo, (
+                id_ficha1,
+                reflejo.get('izquierdo'),
+                reflejo.get('reflejo'),
+                reflejo.get('derecho')
+            ))
+
+        # Actualización en la tabla pruebas_evaluaciones_complementarias_miembro_superior
+        cursor.execute("DELETE FROM pruebasevaluacionescomplementarias_miembro_superior WHERE id_ficha = %s", (id_ficha1,))
+        for prueba in data.get('pruebasEvaluacionesComplementariasMiembrosSuperiores', []):
+            insertar_pruebas = """
+            INSERT INTO pruebasevaluacionescomplementarias_miembro_superior (
+                id_ficha, pruebas, resultadosyanalisis
+            ) VALUES (%s, %s, %s)
+            """
+            cursor.execute(insertar_pruebas, (
+                id_ficha1,
+                prueba.get('prueba'),
+                prueba.get('resultado')
+            ))
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------
+
+            # Actualización en la tabla partes_cuerpo_miembro_inferior
+            actualizar_miembro_inferior = """
+            UPDATE partes_cuerpo_miembro_inferior SET
+                id_partes = %s, observacion = %s, palpacion = %s, descripcion = %s, dolor = %s
+            WHERE id_ficha = %s
+            """
+            cursor.execute(actualizar_miembro_inferior, (
+                2,
+                data.get('observacionesMiembrosInferiores'),
+                data.get('palpacionMiembrosInferiores'),
+                data.get('dolorSuperiorMiembrosInferiores'),
+                data.get('dolorexplofisicaMiembrosInferiores'),
+                id_ficha1
+            ))
+
+            # Actualización en la tabla fuerza_muscular_miembro_inferior
+            cursor.execute("DELETE FROM fuerza_muscular_miembro_inferior WHERE id_ficha = %s", (id_ficha1,))
+            for movimiento in data.get('fuerzaMuscularMiembrosInferiores', []):
+                insertar_fuerza_muscular = """
+                INSERT INTO fuerza_muscular_miembro_inferior (
+                    id_ficha, derecha, movimiento, izquierda
+                ) VALUES (%s, %s, %s, %s)
+                """
+                cursor.execute(insertar_fuerza_muscular, (
+                    id_ficha1,
+                    movimiento['derecho'],
+                    movimiento['movimiento'],
+                    movimiento['izquierdo']
+                ))
+
+            # Actualización en la tabla goniometria_miembro_inferior
+            cursor.execute("DELETE FROM goniometria_miembro_inferior WHERE id_ficha = %s", (id_ficha1,))
+            for goniometria in data.get('goniometriaMiembrosInferiores', []):
+                insertar_goniometria = """
+                INSERT INTO goniometria_miembro_inferior (
+                    id_ficha, rango_normal, izquierdo, movimiento, derecho
+                ) VALUES (%s, %s, %s, %s, %s)
+                """
+                cursor.execute(insertar_goniometria, (
+                    id_ficha1,
+                    goniometria.get('rango'),
+                    goniometria.get('izquierdo'),
+                    goniometria.get('movimiento'),
+                    goniometria.get('derecho')
+                ))
+
+            # Actualización en la tabla reflejososteotendinosos_miembro_inferior
+            cursor.execute("DELETE FROM reflejososteotendinosos_miembro_inferior WHERE id_ficha = %s", (id_ficha1,))
+            for reflejo in data.get('reflejosOsteotendinososMiembrosInferiores', []):
+                insertar_reflejo = """
+                INSERT INTO reflejososteotendinosos_miembro_inferior (
+                    id_ficha, izq, rot, der
+                ) VALUES (%s, %s, %s, %s)
+                """
+                cursor.execute(insertar_reflejo, (
+                    id_ficha1,
+                    reflejo['izquierdo'],
+                    reflejo['reflejo'],
+                    reflejo['derecho']
+                ))
+
+            # Actualización en la tabla pruebasevaluacionescomplementarias_miembro_inferior
+            cursor.execute("DELETE FROM pruebasevaluacionescomplementarias_miembro_inferior WHERE id_ficha = %s", (id_ficha1,))
+            for prueba in data.get('pruebasEvaluacionesComplementariasMiembrosInferiores', []):
+                insertar_pruebas = """
+                INSERT INTO pruebasevaluacionescomplementarias_miembro_inferior (
+                    id_ficha, pruebas, resultadosyanalisis
+                ) VALUES (%s, %s, %s)
+                """
+                cursor.execute(insertar_pruebas, (
+                    id_ficha1,
+                    prueba.get('prueba'),
+                    prueba.get('resultado')
+                ))
+
+            # Actualización en la tabla ciclo_marcha_miembro_inferior
+            evaluacion_marcha = data.get('evaluacionMarcha', {})
+            actualizar_ciclo_marcha = """
+            UPDATE ciclo_marcha_miembro_inferior SET
+                fase_apoyo_completo = %s, contacto_talon_izquierdo = %s, contacto_talon_derecho = %s, 
+                apoyo_plantar_izquierdo = %s, apoyo_plantar_derecho = %s, apoyo_medio_izquierdo = %s, 
+                apoyo_medio_derecho = %s, fase_oscilacion_completo = %s, balanceo_inicial_izquierdo = %s, 
+                balanceo_inicial_derecho = %s, balanceo_medio_izquierdo = %s, balanceo_medio_derecho = %s, 
+                balanceo_terminal_izquierdo = %s, balanceo_terminal_derecho = %s, rotacion_pelvica_completo = %s, 
+                inclinacion_pelvica_completo = %s, flexion_rodilla_izquierdo = %s, flexion_rodilla_derecho = %s, 
+                movimientos_coordinados_rodilla_tobillo_izquierdo = %s, movimientos_coordinados_rodilla_tobillo_derecho = %s, 
+                movimiento_centro_gravedad_completo = %s, cadencia_completo = %s, balanceo_ms_completo = %s
+            WHERE id_ficha = %s
+            """
+            cursor.execute(actualizar_ciclo_marcha, (
+                evaluacion_marcha.get('faseApoyoCompleto'),
+                evaluacion_marcha.get('contactoTalonIzquierdo'),
+                evaluacion_marcha.get('contactoTalonDerecho'),
+                evaluacion_marcha.get('apoyoPlantarIzquierdo'),
+                evaluacion_marcha.get('apoyoPlantarDerecho'),
+                evaluacion_marcha.get('apoyoMedioIzquierdo'),
+                evaluacion_marcha.get('apoyoMedioDerecho'),
+                evaluacion_marcha.get('faseOscilacionCompleto'),
+                evaluacion_marcha.get('balanceoInicialIzquierdo'),
+                evaluacion_marcha.get('balanceoInicialDerecho'),
+                evaluacion_marcha.get('balanceoMedioIzquierdo'),
+                evaluacion_marcha.get('balanceoMedioDerecho'),
+                evaluacion_marcha.get('balanceoTerminalIzquierdo'),
+                evaluacion_marcha.get('balanceoTerminalDerecho'),
+                evaluacion_marcha.get('rotacionPelvicaCompleto'),
+                evaluacion_marcha.get('inclinacionPelvicaCompleto'),
+                evaluacion_marcha.get('flexionRodillaIzquierdo'),
+                evaluacion_marcha.get('flexionRodillaDerecho'),
+                evaluacion_marcha.get('movimientosCoordinadosRodillaTobilloIzquierdo'),
+                evaluacion_marcha.get('movimientosCoordinadosRodillaTobilloDerecho'),
+                evaluacion_marcha.get('movimientoCentroGravedadCompleto'),
+                evaluacion_marcha.get('cadenciaCompleto'),
+                evaluacion_marcha.get('balanceoMSCompleto'),
+                id_ficha1
+            ))
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------
+
+            # Actualización en la tabla partes_cuerpo_cabeza_y_torax
+            actualizar_partes_cuerpo_cabeza_y_torax = """
+            UPDATE partes_cuerpo_cabeza_y_torax SET
+                id_partes = %s, observacion = %s, palpacion = %s, descripcion = %s, dolor = %s
+            WHERE id_ficha = %s
+            """
+            cursor.execute(actualizar_partes_cuerpo_cabeza_y_torax, (
+                3,  # Valor fijo para `id_partes`
+                data.get('observacionesCabezaCuello'),
+                data.get('palpacionCabezaCuello'),
+                data.get('dolorSuperiorCabezaCuello'),
+                data.get('dolorexplofisicaCabezaCuello'),
+                id_ficha1
+            ))
+
+            # Actualización en la tabla fuerza_muscular_cabeza_y_torax
+            cursor.execute("DELETE FROM fuerza_muscular_cabeza_y_torax WHERE id_ficha = %s", (id_ficha1,))
+            for movimiento in data.get('fuerzaMuscularCabezaTorax1', []):
+                insertar_fuerza_muscular_cabeza_y_torax = """
+                INSERT INTO fuerza_muscular_cabeza_y_torax (
+                    id_ficha, movimiento, valores_obtenidos
+                ) VALUES (%s, %s, %s)
+                """
+                cursor.execute(insertar_fuerza_muscular_cabeza_y_torax, (
+                    id_ficha1,
+                    movimiento['movimiento'],
+                    movimiento['valoresObtenidos']
+                ))
+
+            # Actualización en la tabla partes_cuerpo_cabeza_y_torax1
+            actualizar_partes_cuerpo_cabeza_y_torax1 = """
+            UPDATE partes_cuerpo_cabeza_y_torax1 SET
+                id_partes = %s, observacion = %s, palpacion = %s, descripcion = %s, dolor = %s
+            WHERE id_ficha = %s
+            """
+            cursor.execute(actualizar_partes_cuerpo_cabeza_y_torax1, (
+                4,  # Valor fijo para `id_partes`
+                data.get('observacionesColumnaTóraxAbdomen'),
+                data.get('palpacionColumnaTóraxAbdomen'),
+                data.get('dolorSuperiorColumnaTóraxAbdomen'),
+                data.get('dolorexplofisicaColumnaTóraxAbdomen'),
+                id_ficha1
+            ))
+
+            # Actualización en la tabla fuerza_muscular_cabeza_y_torax1
+            cursor.execute("DELETE FROM fuerza_muscular_cabeza_y_torax1 WHERE id_ficha = %s", (id_ficha1,))
+            for movimiento in data.get('fuerzaMuscularCabezaTorax2', []):
+                insertar_fuerza_muscular_cabeza_y_torax1 = """
+                INSERT INTO fuerza_muscular_cabeza_y_torax1 (
+                    id_ficha, movimiento, valores_obtenidos
+                ) VALUES (%s, %s, %s)
+                """
+                cursor.execute(insertar_fuerza_muscular_cabeza_y_torax1, (
+                    id_ficha1,
+                    movimiento['movimiento'],
+                    movimiento['valoresObtenidos']
+                ))
+
+            # Actualización en la tabla goniometria_cabeza_y_torax
+            cursor.execute("DELETE FROM goniometria_cabeza_y_torax WHERE id_ficha = %s", (id_ficha1,))
+            for goniometria in data.get('goniometriaCabezaTorax', []):
+                insertar_goniometria_cabeza_y_torax = """
+                INSERT INTO goniometria_cabeza_y_torax (
+                    id_ficha, rangos_normales, movimientos, resultados
+                ) VALUES (%s, %s, %s, %s)
+                """
+                cursor.execute(insertar_goniometria_cabeza_y_torax, (
+                    id_ficha1,
+                    goniometria['rango'],
+                    goniometria['movimiento'],
+                    goniometria['resultados']
+                ))
+
+            # Actualización en la tabla pruebas_evaluaciones_complementarias_cabeza_y_torax
+            cursor.execute("DELETE FROM pruebasevaluacionescomplementarias_cabeza_y_torax WHERE id_ficha = %s", (id_ficha1,))
+            for prueba in data.get('pruebasEvaluacionesComplementariasCabezaTorax', []):
+                insertar_pruebas_evaluaciones_complementarias_cabeza_y_torax = """
+                INSERT INTO pruebasevaluacionescomplementarias_cabeza_y_torax (
+                    id_ficha, pruebas, resultadosyanalisis
+                ) VALUES (%s, %s, %s)
+                """
+                cursor.execute(insertar_pruebas_evaluaciones_complementarias_cabeza_y_torax, (
+                    id_ficha1,
+                    prueba['prueba'],
+                    prueba['resultado']
+                ))
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------
+
+            # Actualización en la tabla vistafrontal
+            cursor.execute("DELETE FROM vistafrontal WHERE id_ficha = %s", (id_ficha1,))
+            for vista in data.get('vistaFrontal', []):
+                insertar_vista_frontal = """
+                INSERT INTO vistafrontal (id_ficha, alineacion_corporal, observaciones)
+                VALUES (%s, %s, %s)
+                """
+                cursor.execute(insertar_vista_frontal, (
+                    id_ficha1,
+                    vista.get('alineacionCorporal'),
+                    vista.get('ObservacionesvistaFrontal')
+                ))
+
+            # Actualización en la tabla vistalateral
+            cursor.execute("DELETE FROM vistalateral WHERE id_ficha = %s", (id_ficha1,))
+            for vista in data.get('vistaLateral', []):
+                insertar_vista_lateral = """
+                INSERT INTO vistalateral (id_ficha, alineacion_corporal, observaciones)
+                VALUES (%s, %s, %s)
+                """
+                cursor.execute(insertar_vista_lateral, (
+                    id_ficha1,
+                    vista.get('alineacionCorporal1'),
+                    vista.get('ObservacionesvistaLateral')
+                ))
+
+            # Actualización en la tabla vistaposterior
+            cursor.execute("DELETE FROM vistaposterior WHERE id_ficha = %s", (id_ficha1,))
+            for vista in data.get('vistaPosterior', []):
+                insertar_vista_posterior = """
+                INSERT INTO vistaposterior (id_ficha, alineacion_corporal, observaciones)
+                VALUES (%s, %s, %s)
+                """
+                cursor.execute(insertar_vista_posterior, (
+                    id_ficha1,
+                    vista.get('alineacionCorporal2'),
+                    vista.get('ObservacionesvistaPosterior')
+                ))
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------
+
+            # Eliminar los datos existentes en la tabla notas_seguimientos
+            cursor.execute("DELETE FROM notas_seguimientos WHERE id_ficha = %s", (id_ficha1,))
+
+            # Insertar el dato principal en la tabla notas_seguimientos
+            datosPrincipal = data.get('principal', {})
+            sql = """
+            INSERT INTO notas_seguimientos (
+                id_ficha, nombre, diagnostico, folio, fecha, numero_sesion, notas, sugerencias_observaciones, nombreYfirma_tratante
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            valores = (
+                id_ficha1,
+                datosPrincipal.get('nombrePaciente_Seguimiento'),
+                datosPrincipal.get('diagnostico_Seguimiento'),
+                datosPrincipal.get('folio_Seguimiento'),
+                datosPrincipal.get('fecha_Seguimiento'),
+                datosPrincipal.get('sesion_Seguimiento'),
+                datosPrincipal.get('notas_Seguimiento'),
+                datosPrincipal.get('sugerencias_Seguimiento'),
+                datosPrincipal.get('nombrefirma_Seguimiento')
+            )
+            cursor.execute(sql, valores)
+
+            # Insertar cada sección adicional en la tabla notas_seguimientos
+            for seccion in data.get('secciones', []):
+                valores_seccion = (
+                    id_ficha1,
+                    seccion.get('nombrePaciente_Seguimiento'),
+                    seccion.get('diagnostico_Seguimiento'),
+                    seccion.get('folio_Seguimiento'),
+                    seccion.get('fecha_Seguimiento'),
+                    seccion.get('sesion_Seguimiento'),
+                    seccion.get('notas_Seguimiento'),
+                    seccion.get('sugerencias_Seguimiento'),
+                    seccion.get('nombrefirma_Seguimiento')
+                )
+                cursor.execute(sql, valores_seccion)
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------
+
+            # Eliminar los datos existentes en la tabla plan_tratamientos
+            cursor.execute("DELETE FROM plan_tratamientos WHERE id_ficha = %s", (id_ficha1,))
+
+            # Insertar los datos actualizados en la tabla plan_tratamientos
+            plan_tratamiento = data.get('planTratamiento', [])
+            for tratamiento in plan_tratamiento:
+                insertar_plan_tratamiento = """
+                INSERT INTO plan_tratamientos (
+                    id_ficha, objetivo, modalidad_terapeutica, descripcion, dosis
+                ) VALUES (%s, %s, %s, %s, %s)
+                """
+                cursor.execute(insertar_plan_tratamiento, (
+                    id_ficha1,
+                    tratamiento.get('objetivo'),
+                    tratamiento.get('modalidad'),
+                    tratamiento.get('descripcion'),
+                    tratamiento.get('dosis')
+                ))
+
+        connection.commit()
+        return jsonify({'success': True})
+    except Error as e:
+        print(f"Error al actualizar en la base de datos: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
 
 @app.route('/guardar_datos', methods=['POST'])
 def guardar_datos():
@@ -1144,8 +2915,10 @@ def guardar_datos():
                 vista.get('alineacionCorporal2'),
                 vista.get('ObservacionesvistaPosterior')
             ))
+            
+# -------------------------------------------------------------------------------------------------------------------------------------------------------            
 
-# Insertar los datos en la tabla notas_seguimiento
+        # Insertar los datos en la tabla notas_seguimiento
         datosPrincipal = data.get('principal', {})
         sql = """
         INSERT INTO notas_seguimientos (id_ficha, nombre, diagnostico, folio, fecha, numero_sesion, notas, sugerencias_observaciones, nombreYfirma_tratante)
@@ -1178,6 +2951,8 @@ def guardar_datos():
                 seccion.get('nombrefirma_Seguimiento')
             )
             cursor.execute(sql, valores_seccion)
+            
+# -------------------------------------------------------------------------------------------------------------------------------------------------------            
 
         # Inserción en la tabla plan_tratamientos
         plan_tratamiento = data.get('planTratamiento', [])
@@ -1211,37 +2986,68 @@ def exportar_excel():
     cursor = connection.cursor()
 
     # Ejecutar todas las consultas necesarias y almacenar los resultados en un DataFrame
-    queries = [
+    queries = [ 
+        # Consulta original para ficha_identificaciones
         "SELECT * FROM ficha_identificaciones",
-        "SELECT * FROM antecedentespersonalesnopatologicos",
-        "SELECT * FROM antecedentesheredofamiliares",
-        "SELECT * FROM antecedentes_patologicos",
-        "SELECT * FROM antecedentes_ginecobstetricos",
-        "SELECT * FROM antecedentes_padecimientoactual",
-        "SELECT * FROM exploracion",
-        "SELECT * FROM partes_cuerpo_miembro_superior",
-        "SELECT * FROM fuerza_muscular_miembro_superior",
-        "SELECT * FROM goniometria_miembro_superior",
-        "SELECT * FROM reflejososteotendinosos_miembro_superior",
-        "SELECT * FROM pruebasevaluacionescomplementarias_miembro_superior",
-        "SELECT * FROM partes_cuerpo_miembro_inferior",
-        "SELECT * FROM fuerza_muscular_miembro_inferior",
-        "SELECT * FROM goniometria_miembro_inferior",
-        "SELECT * FROM reflejososteotendinosos_miembro_inferior",
-        "SELECT * FROM pruebasevaluacionescomplementarias_miembro_inferior",
-        "SELECT * FROM ciclo_marcha_miembro_inferior",
-        "SELECT * FROM partes_cuerpo_cabeza_y_torax",
-        "SELECT * FROM fuerza_muscular_cabeza_y_torax",
-        "SELECT * FROM partes_cuerpo_cabeza_y_torax1",
-        "SELECT * FROM fuerza_muscular_cabeza_y_torax1",
-        "SELECT * FROM goniometria_cabeza_y_torax",
-        "SELECT * FROM pruebasevaluacionescomplementarias_cabeza_y_torax",
-        "SELECT * FROM vistafrontal",
-        "SELECT * FROM vistalateral",
-        "SELECT * FROM vistaposterior",
-        "SELECT * FROM plan_tratamientos",
-        "SELECT * FROM notas_seguimientos"
+
+        # Consultas adaptadas para incluir nombre_paciente al principio
+        "SELECT ficha_identificaciones.nombre_paciente, antecedentespersonalesnopatologicos.* FROM antecedentespersonalesnopatologicos JOIN ficha_identificaciones ON antecedentespersonalesnopatologicos.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, antecedentesheredofamiliares.* FROM antecedentesheredofamiliares JOIN ficha_identificaciones ON antecedentesheredofamiliares.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, antecedentes_patologicos.* FROM antecedentes_patologicos JOIN ficha_identificaciones ON antecedentes_patologicos.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, antecedentes_ginecobstetricos.* FROM antecedentes_ginecobstetricos JOIN ficha_identificaciones ON antecedentes_ginecobstetricos.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, antecedentes_padecimientoactual.* FROM antecedentes_padecimientoactual JOIN ficha_identificaciones ON antecedentes_padecimientoactual.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, exploracion.* FROM exploracion JOIN ficha_identificaciones ON exploracion.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, partes_cuerpo_miembro_superior.* FROM partes_cuerpo_miembro_superior JOIN ficha_identificaciones ON partes_cuerpo_miembro_superior.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, fuerza_muscular_miembro_superior.* FROM fuerza_muscular_miembro_superior JOIN ficha_identificaciones ON fuerza_muscular_miembro_superior.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, goniometria_miembro_superior.* FROM goniometria_miembro_superior JOIN ficha_identificaciones ON goniometria_miembro_superior.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, reflejososteotendinosos_miembro_superior.* FROM reflejososteotendinosos_miembro_superior JOIN ficha_identificaciones ON reflejososteotendinosos_miembro_superior.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, pruebasevaluacionescomplementarias_miembro_superior.* FROM pruebasevaluacionescomplementarias_miembro_superior JOIN ficha_identificaciones ON pruebasevaluacionescomplementarias_miembro_superior.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, partes_cuerpo_miembro_inferior.* FROM partes_cuerpo_miembro_inferior JOIN ficha_identificaciones ON partes_cuerpo_miembro_inferior.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, fuerza_muscular_miembro_inferior.* FROM fuerza_muscular_miembro_inferior JOIN ficha_identificaciones ON fuerza_muscular_miembro_inferior.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, goniometria_miembro_inferior.* FROM goniometria_miembro_inferior JOIN ficha_identificaciones ON goniometria_miembro_inferior.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, reflejososteotendinosos_miembro_inferior.* FROM reflejososteotendinosos_miembro_inferior JOIN ficha_identificaciones ON reflejososteotendinosos_miembro_inferior.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, pruebasevaluacionescomplementarias_miembro_inferior.* FROM pruebasevaluacionescomplementarias_miembro_inferior JOIN ficha_identificaciones ON pruebasevaluacionescomplementarias_miembro_inferior.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, ciclo_marcha_miembro_inferior.* FROM ciclo_marcha_miembro_inferior JOIN ficha_identificaciones ON ciclo_marcha_miembro_inferior.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, partes_cuerpo_cabeza_y_torax.* FROM partes_cuerpo_cabeza_y_torax JOIN ficha_identificaciones ON partes_cuerpo_cabeza_y_torax.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, fuerza_muscular_cabeza_y_torax.* FROM fuerza_muscular_cabeza_y_torax JOIN ficha_identificaciones ON fuerza_muscular_cabeza_y_torax.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, partes_cuerpo_cabeza_y_torax1.* FROM partes_cuerpo_cabeza_y_torax1 JOIN ficha_identificaciones ON partes_cuerpo_cabeza_y_torax1.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, fuerza_muscular_cabeza_y_torax1.* FROM fuerza_muscular_cabeza_y_torax1 JOIN ficha_identificaciones ON fuerza_muscular_cabeza_y_torax1.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, goniometria_cabeza_y_torax.* FROM goniometria_cabeza_y_torax JOIN ficha_identificaciones ON goniometria_cabeza_y_torax.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, pruebasevaluacionescomplementarias_cabeza_y_torax.* FROM pruebasevaluacionescomplementarias_cabeza_y_torax JOIN ficha_identificaciones ON pruebasevaluacionescomplementarias_cabeza_y_torax.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, vistafrontal.* FROM vistafrontal JOIN ficha_identificaciones ON vistafrontal.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, vistalateral.* FROM vistalateral JOIN ficha_identificaciones ON vistalateral.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, vistaposterior.* FROM vistaposterior JOIN ficha_identificaciones ON vistaposterior.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, plan_tratamientos.* FROM plan_tratamientos JOIN ficha_identificaciones ON plan_tratamientos.id_ficha = ficha_identificaciones.id",
+        
+        "SELECT ficha_identificaciones.nombre_paciente, notas_seguimientos.* FROM notas_seguimientos JOIN ficha_identificaciones ON notas_seguimientos.id_ficha = ficha_identificaciones.id"
     ]
+
     
     # Lista para almacenar todos los DataFrames
     dataframes = []
